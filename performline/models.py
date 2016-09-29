@@ -1,10 +1,14 @@
-from util import must_get
+from util import must_get, camelize
 
 
-class Model:
+class Model(object):
     def __init__(self, data):
         self.data = data
 
     def __getattr__(self, name):
-        return must_get(self.data, name)
+        candidate_key = camelize(name, True)
 
+        if candidate_key in self.data:
+            return must_get(self.data, candidate_key)
+        else:
+            return super(self, name)

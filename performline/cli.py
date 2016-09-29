@@ -58,7 +58,8 @@ class State(object):
               default='warning',
               type=click.Choice([
                 'debug', 'info', 'warning', 'error',
-              ]))
+              ]),
+              envvar='LOGLEVEL')
 @click.option('--format', '-f',
               default='text',
               type=click.Choice([

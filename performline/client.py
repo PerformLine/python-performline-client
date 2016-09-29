@@ -89,8 +89,8 @@ class Client(CommonClientMethods, object):
         if isinstance(response, ErrorResponse):
             raise Exception(response.message())
         elif isinstance(response, SuccessResponse) and response.length() > 0:
-            if isinstance(model, Model):
-                models = [Model(i) for i in response.results()]
+            if issubclass(model, Model):
+                models = [model(i) for i in response.results()]
 
                 if flat and len(models) == 1:
                     return models[0]
