@@ -6,6 +6,8 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
+env:
+  - PERFORMLINE_API_KEY=00e4db7592541054d3791f42d62524f4139705c4
 
 install:
   - make deps

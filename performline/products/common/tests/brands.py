@@ -1,15 +1,6 @@
 import unittest
-import os
-from performline.client import Client
 from ..models import Brand
-
-
-def client():
-    c = Client('00e4db7592541054d3791f42d62524f4139705c4',
-               loglevel=os.environ.get('LOGLEVEL', 'WARNING'))
-    c.url = 'http://localhost:8000'
-    c.prefix = '/api/'
-    return c
+from ....testing import client
 
 
 class TestBrands(unittest.TestCase):
@@ -41,7 +32,3 @@ class TestBrands(unittest.TestCase):
 
         self.assertEqual(brand.id, 11)
         self.assertEqual(brand.name, u'A. Foo Industries')
-
-
-if __name__ == '__main__':
-    unittest.main()
