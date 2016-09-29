@@ -1,8 +1,10 @@
 import unittest
-from client import *
+from performline.client import Client
+
 
 def client():
-    return Client('b0c777ac2a6018186fed2b0a6b55a62345a973d8')
+    return Client('b0c777ac2a6018186fed2b0a6b55a62345a973d8', loglevel='DEBUG')
+
 
 class TestBrands(unittest.TestCase):
     def setUp(self):
