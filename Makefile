@@ -9,7 +9,7 @@ build:
 	pip install --editable .
 
 test:
-	@python test.py
+	@py.test performline/products/*/tests/*.py
 
 clean:
 	@find . -maxdepth 1 -type f -name "*.pyc" -delete
