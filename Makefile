@@ -1,15 +1,13 @@
 .PHONY: clean test deps
 
-all: clean build test
+all: clean test
 
 deps:
 	pip install -r requirements.txt
 
-build:
-	pip install --editable .
-
 test:
-	@py.test performline/products/*/tests/*.py
+	flake8
+	py.test performline/products/*/tests/*.py
 
 clean:
 	@find . -maxdepth 1 -type f -name "*.pyc" -delete

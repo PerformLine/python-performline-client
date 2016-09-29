@@ -1,7 +1,7 @@
 import unittest
 import os
 from performline.client import Client
-from performline.products.common.models import Brand
+from ..models import Brand
 
 
 def client():

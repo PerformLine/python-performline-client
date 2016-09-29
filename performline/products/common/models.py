@@ -1,4 +1,4 @@
-from performline.models import Model
+from ...models import Model
 
 
 class Brand(Model):

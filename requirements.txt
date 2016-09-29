@@ -1,5 +1,11 @@
 argcomplete==1.4.1
 click==6.6
+configparser==3.5.0
+enum34==1.1.6
+flake8==3.0.4
+mccabe==0.5.2
 py==1.4.31
+pycodestyle==2.0.0
+pyflakes==1.2.3
 pytest==3.0.2
 requests==2.11.1
