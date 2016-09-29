@@ -1,7 +1,7 @@
 import requests
 import logging
-from util import get, must_get
-from models import Model
+from .util import get, must_get
+from .models import Model
 from .products.common.api import CommonClientMethods
 
 ALLOWED_METHODS = ['get', 'post', 'put', 'delete', 'options', 'head']

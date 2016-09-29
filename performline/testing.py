@@ -1,5 +1,5 @@
 import os
-from client import Client
+from .client import Client
 
 
 def client():

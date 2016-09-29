@@ -1,4 +1,4 @@
-from util import must_get, camelize
+from .util import must_get, camelize
 
 
 class Model(object):
