@@ -1,13 +1,14 @@
 import requests
 import logging
 from util import get, must_get
-from models import Model, Brand
+from models import Model
+from .products.common.api import CommonClientMethods
 
 ALLOWED_METHODS = ['get', 'post', 'put', 'delete', 'options', 'head']
 RX_TRIM_SLASH = r'(?:^/*|/*$)'
 
 
-class Response:
+class Response(object):
     def __init__(self, data={}):
         self.data = data
 
@@ -43,7 +44,7 @@ class ErrorResponse(Response):
         return self.get('ErrorDetails')
 
 
-class Client:
+class Client(CommonClientMethods, object):
     url = 'https://api.performmatch.com'
     prefix = '/'
 
@@ -72,7 +73,7 @@ class Client:
         response = getattr(requests, method)(
             '%s/%s%s/' % (
                 self.url.strip('/'),
-                self.prefix,
+                self.prefix.lstrip('/'),
                 path.strip('/'),
             ),
             data=data,
@@ -97,11 +98,3 @@ class Client:
                     return models
 
         return None
-
-    def brands(self, brand_id=None):
-        if brand_id is None:
-            response = self.request('get', '/common/brands/')
-            return self.wrap_response(response, Brand)
-        else:
-            response = self.request('get', '/common/brands/%d/' % brand_id)
-            return self.wrap_response(response, Brand, flat=True)

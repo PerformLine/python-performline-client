@@ -9,6 +9,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        performline=performline.main
+        performline=performline.cli
     ''',
 )

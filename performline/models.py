@@ -8,6 +8,3 @@ class Model:
     def __getattr__(self, name):
         return must_get(self.data, name)
 
-
-class Brand(Model):
-    pass

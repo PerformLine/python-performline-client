@@ -1,18 +1,21 @@
 import click
 
 
-@click.group()
+@click.group(
+             help='Brands associated with your account')
 def brands():
     pass
 
 
-@brands.command()
-def list():
-    click.echo('brands: list')
+@brands.command(help='List all brands')
+@click.pass_obj
+def list(state):
+    click.echo(state.client.brands())
 
 
-@brands.command()
+@brands.command(help='Show details about a single brand')
 @click.argument('id',
                 type=int)
-def show(id):
-    click.echo('brands: show %d' % id)
+@click.pass_obj
+def show(state, id):
+    state.client.brands(id)

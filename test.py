@@ -3,7 +3,10 @@ from performline.client import Client
 
 
 def client():
-    return Client('b0c777ac2a6018186fed2b0a6b55a62345a973d8', loglevel='DEBUG')
+    c = Client('00e4db7592541054d3791f42d62524f4139705c4', loglevel='DEBUG')
+    c.url = 'http://localhost:8000'
+    c.prefix = '/api/'
+    return c
 
 
 class TestBrands(unittest.TestCase):
