@@ -3,7 +3,8 @@ from .client import Client
 
 
 def client():
-    c = Client(os.environ.get('PERFORMLINE_API_KEY'),
+    # build a test client, falling back to the well-known test API key
+    c = Client(os.environ.get('PERFORMLINE_API_KEY', '00e4db7592541054d3791f42d62524f4139705c4'),
                loglevel=os.environ.get('LOGLEVEL', 'WARNING'))
 
     url = os.environ.get('PERFORMLINE_API_URL')
