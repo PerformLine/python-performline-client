@@ -10,14 +10,8 @@ setup(
         'requests==2.11.1',
     ],
     tests_require=[
-        'argcomplete>=1.4.1,<1.5.0',
-        'configparser==3.5.0',
-        'enum34==1.1.6',
-        'flake8==3.0.4',
-        'mccabe==0.5.2',
-        'pycodestyle==2.0.0',
-        'pyflakes==1.2.3',
-        'pytest==3.0.2',
+        'pytest',
+        'flake8',
     ],
     entry_points={
         'console_scripts': [
