@@ -1,16 +1,17 @@
 .PHONY: clean test deps
 
-all: venv clean test
+all: venv test
 
 venv:
 	virtualenv --distribute venv
 
 deps:
-	pip install -r requirements.txt
+	pip install -I -r requirements.txt
 
-test:
-	flake8 || make deps
+test: deps
+	flake8
 	py.test performline/products/*/tests/*.py
 
 clean:
 	@find . -maxdepth 1 -type f -name "*.pyc" -delete
+	rm -rf venv
