@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # vim:syntax=python filetype=py
+from __future__ import unicode_literals
 from .client import Client
 from .products.common.cli.brands import brands
 from .products.common.cli.campaigns import campaigns

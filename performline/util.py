@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import re
 
 CAMEL_OMIT = r'[\W\s\_\-]+'

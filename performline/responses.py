@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from .util import get, must_get
 
 
