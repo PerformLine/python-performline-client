@@ -15,7 +15,7 @@ setup(
         'enum34==1.1.6',
         'flake8==3.0.4',
         'mccabe==0.5.2',
-        'py==1.4.31',
+        'py>=1.4.26,<1.5.0',
         'pycodestyle==2.0.0',
         'pyflakes==1.2.3',
         'pytest==3.0.2',
