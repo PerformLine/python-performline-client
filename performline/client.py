@@ -1,47 +1,15 @@
 import requests
 import logging
-from .util import get, must_get
+import datetime
 from .models import Model
+from .responses import SuccessResponse, ErrorResponse
+from .exceptions import AuthenticationFailed, \
+                        NotFound, \
+                        ServiceUnavailable
 from .products.common.api import CommonClientMethods
 
 ALLOWED_METHODS = ['get', 'post', 'put', 'delete', 'options', 'head']
 RX_TRIM_SLASH = r'(?:^/*|/*$)'
-
-
-class Response(object):
-    def __init__(self, data={}):
-        self.data = data
-
-    def status(self):
-        return self.must_get('Status')
-
-    def must_get(self, path):
-        return must_get(self.data, path)
-
-    def get(self, path, fallback=None):
-        return get(self.data, path, fallback)
-
-
-class SuccessResponse(Response):
-    def total_length(self):
-        return self.get('ResultCount/Total', 0)
-
-    def length(self):
-        return self.get('ResultCount/Current', self.total_length())
-
-    def page_count(self):
-        return self.get('ResultCount/Pages', 0)
-
-    def results(self):
-        return self.get('Results', [])
-
-
-class ErrorResponse(Response):
-    def message(self):
-        return self.get('ErrorMessage')
-
-    def details(self):
-        return self.get('ErrorDetails')
 
 
 class Client(CommonClientMethods, object):
@@ -80,15 +48,34 @@ class Client(CommonClientMethods, object):
             params=params,
             headers=headers)
 
+        if response.headers.get('X-PerformLine-Deprecated') == '1':
+            _notAfter = response.headers.get('X-PerformLine-Deprecated-After')
+            afterMsg = ''
+
+            if _notAfter is not None:
+                notAfter = datetime.datetime.strptime(_notAfter, '%Y-%m-%dT%H:%M:%S.%f')
+                afterMsg = ' It will stop working after %s. ' % notAfter
+
+            logging.warning('The API endpoint "%s" has been marked deprecated.%s' % afterMsg)
+            logging.warning((
+                'Upgrade the performline Python module to the latest version to '
+                'stop seeing this message.'
+            ))
+
         if response.status_code < 400:
             return SuccessResponse(response.json())
         else:
-            return ErrorResponse(response.json())
+            if response.status_code == 403:
+                raise AuthenticationFailed(response.json())
+            elif response.status_code == 404:
+                raise NotFound(response.json())
+            elif response.status_code >= 500:
+                raise ServiceUnavailable(response.json())
+            else:
+                raise ErrorResponse(response.json())
 
     def wrap_response(self, response, model, flat=False):
-        if isinstance(response, ErrorResponse):
-            raise Exception(response.message())
-        elif isinstance(response, SuccessResponse) and response.length() > 0:
+        if isinstance(response, SuccessResponse) and response.length() > 0:
             if issubclass(model, Model):
                 models = [model(i) for i in response.results()]
 
