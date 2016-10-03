@@ -8,8 +8,6 @@ setup(
     install_requires=[
         'click==6.6',
         'requests==2.11.1',
-    ],
-    tests_require=[
         'pytest',
         'flake8',
     ],

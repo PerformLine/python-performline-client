@@ -9,7 +9,6 @@ deps:
 	pip install -I -r requirements.txt
 
 just-test:
-	python setup.py test
 	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || flake8
 	py.test performline/products/*/tests/*.py
 
