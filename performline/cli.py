@@ -93,7 +93,7 @@ main.add_command(sources)
 
 try:
     main(auto_envvar_prefix='PERFORMLINE')
-except Exception, e:
+except Exception as e:
     if isinstance(e, ErrorResponse):
         errout('The PerformMatch API encountered an error: %s' % e.message)
     else:
