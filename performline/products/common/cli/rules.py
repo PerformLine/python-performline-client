@@ -1,9 +1,8 @@
-from __future__ import unicode_literals
 import click
+from ....cliutils import out
 
 
-@click.group(
-             help='Information on rules')
+@click.group(help='Information on rules')
 def rules():
     pass
 
@@ -11,7 +10,7 @@ def rules():
 @rules.command(help='List all rules')
 @click.pass_obj
 def list(state):
-    click.echo(state.client.rules())
+    out(state, state.client.rules())
 
 
 @rules.command(help='Show details about a specific rule')
@@ -19,4 +18,4 @@ def list(state):
                 type=int)
 @click.pass_obj
 def show(state, id):
-    state.client.rules(id)
+    out(state, state.client.rules(id))

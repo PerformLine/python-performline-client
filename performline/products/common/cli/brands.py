@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
+from __future__ import absolute_import
 import click
+from ....cliutils import out
 
 
-@click.group(
-             help='Brands associated with your account')
+@click.group(help='Brands associated with your account')
 def brands():
     pass
 
@@ -11,7 +11,7 @@ def brands():
 @brands.command(help='List all brands')
 @click.pass_obj
 def list(state):
-    click.echo(state.client.brands())
+    out(state, state.client.brands())
 
 
 @brands.command(help='Show details about a single brand')
@@ -19,4 +19,4 @@ def list(state):
                 type=int)
 @click.pass_obj
 def show(state, id):
-    state.client.brands(id)
+    out(state, state.client.brands(id))

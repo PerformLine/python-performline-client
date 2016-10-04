@@ -1,9 +1,8 @@
-from __future__ import unicode_literals
 import click
+from ....cliutils import out
 
 
-@click.group(
-             help='Information on campaigns')
+@click.group(help='Information on campaigns')
 def campaigns():
     pass
 
@@ -11,7 +10,7 @@ def campaigns():
 @campaigns.command(help='List all campaigns')
 @click.pass_obj
 def list(state):
-    click.echo(state.client.campaigns())
+    out(state, state.client.campaigns())
 
 
 @campaigns.command(help='Show details about a campaign')
@@ -19,4 +18,4 @@ def list(state):
                 type=int)
 @click.pass_obj
 def show(state, id):
-    state.client.campaigns(id)
+    out(state, state.client.campaigns(id))

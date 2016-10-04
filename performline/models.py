@@ -14,3 +14,6 @@ class Model(object):
             return must_get(self.data, candidate_key)
         else:
             return super(self, name)
+
+    def to_dict(self):
+        return self.data

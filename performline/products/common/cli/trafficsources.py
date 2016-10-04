@@ -1,9 +1,8 @@
-from __future__ import unicode_literals
 import click
+from ....cliutils import out
 
 
-@click.group(
-             help='Information on traffic sources')
+@click.group(help='Information on traffic sources')
 def sources():
     pass
 
@@ -11,7 +10,7 @@ def sources():
 @sources.command(help='List all traffic sources')
 @click.pass_obj
 def list(state):
-    click.echo(state.client.trafficsources())
+    out(state, state.client.trafficsources())
 
 
 @sources.command(help='Show details about a traffic source')
@@ -19,4 +18,4 @@ def list(state):
                 type=int)
 @click.pass_obj
 def show(state, id):
-    state.client.trafficsources(id)
+    out(state, state.client.trafficsources(id))
