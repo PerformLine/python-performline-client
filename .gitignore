@@ -1,8 +1,9 @@
+*.key
 *.pyc
-/venv
 /*.egg-info
 /.cache
-__pycache__
 /.eggs
 /build
 /dist
+/venv
+__pycache__
