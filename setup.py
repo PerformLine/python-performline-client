@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='performline',
     description='Client library for using the public PerformMatch Compliance API',
-    version='0.1.0a5',
+    version='0.1.0a6',
     author='PerformLine Engineering',
     author_email='tech+api@performline.com',
     url='https://github.com/PerformLine/python-performline-client',
@@ -14,7 +14,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'performline=performline.cli',
+            'performline=performline.cli:main',
         ],
     },
     packages=find_packages(exclude=['*.tests']),
