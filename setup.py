@@ -8,8 +8,8 @@ setup(
     author_email='tech+api@performline.com',
     url='https://github.com/PerformLine/python-performline-client',
     install_requires=[
-        'click==6.6',
-        'requests==2.11.1',
+        'click',
+        'requests',
         'pyyaml',
     ],
     entry_points={

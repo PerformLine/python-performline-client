@@ -9,12 +9,22 @@ from .exceptions import AuthenticationFailed, \
                         NotFound, \
                         ServiceUnavailable
 from .products.common.api import CommonClientMethods
+from .products.web.api import WebClientMethods
+from .products.callcenter.api import CallCenterClientMethods
+from .products.chatscout.api import ChatScoutClientMethods
+
 
 ALLOWED_METHODS = ['get', 'post', 'put', 'delete', 'options', 'head']
 RX_TRIM_SLASH = r'(?:^/*|/*$)'
 
 
-class Client(CommonClientMethods, object):
+class Client(
+    ChatScoutClientMethods,
+    CallCenterClientMethods,
+    WebClientMethods,
+    CommonClientMethods,
+    object
+):
     url = 'https://api.performmatch.com'
     prefix = '/'
 

@@ -6,6 +6,9 @@ from .products.common.cli.brands import brands
 from .products.common.cli.campaigns import campaigns
 from .products.common.cli.rules import rules
 from .products.common.cli.trafficsources import sources
+from .products.web.cli.pages import pages
+from .products.callcenter.cli.calls import calls
+from .products.chatscout.cli.chats import chats
 import click
 
 
@@ -37,7 +40,6 @@ class State(object):
                 'The API key to use for authentication '
                 '[$PERFORMLINE_API_KEY]'
               ),
-              required=True,
               envvar='API_KEY')
 @click.option('--api-host',
               metavar='URL',
@@ -87,7 +89,10 @@ def main(ctx,
     })
 
 main.add_command(brands)
+main.add_command(calls)
 main.add_command(campaigns)
+main.add_command(chats)
+main.add_command(pages)
 main.add_command(rules)
 main.add_command(sources)
 

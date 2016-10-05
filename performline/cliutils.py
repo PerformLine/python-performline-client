@@ -24,6 +24,9 @@ def out(state, data=None):
     rv = ''
     data = normalize(data)
 
+    if data is None:
+        return
+
     if state.fmt == 'json':
         rv = json.dumps(data, indent=4)
     elif state.fmt == 'yaml':
