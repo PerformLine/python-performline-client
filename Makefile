@@ -1,6 +1,6 @@
 .PHONY: clean just-test test deps
 
-all: venv test
+all: venv library-prefix test
 
 venv:
 	virtualenv --distribute venv
@@ -16,6 +16,9 @@ just-test:
 	py.test performline/products/*/tests/*.py
 
 test: test-deps just-test
+
+library-prefix:
+	@bash contrib/apply-license-prefix
 
 clean-build:
 	test -d build && rm -rf build || true
@@ -43,8 +46,8 @@ package-push:
 package-push-test:
 	twine upload --skip-existing -r pypitest dist/*
 
-package: deps package-build package-sign package-push
+package: deps library-prefix package-build package-sign package-push
 
-package-test: deps package-build package-sign package-push-test
+package-test: deps library-prefix package-build package-sign package-push-test
 
 

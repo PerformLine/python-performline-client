@@ -7,3 +7,5 @@
 /dist
 /venv
 __pycache__
+/doc/build
+/doc/source/api
