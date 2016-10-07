@@ -9,3 +9,4 @@
 __pycache__
 /doc/build
 /doc/source/api
+/.tox

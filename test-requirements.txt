@@ -1,5 +1,5 @@
--r requirements.txt
 tox
+tox-travis
 pytest
 flake8
 twine
