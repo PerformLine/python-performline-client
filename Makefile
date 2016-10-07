@@ -34,7 +34,7 @@ clean: clean-build docs-clean
 docs-build: docs-clean
 	@cd doc && make html
 
-docs: doc-deps docs-build
+docs: docs-deps docs-build
 
 package-build: clean-build
 	python setup.py sdist bdist_wheel

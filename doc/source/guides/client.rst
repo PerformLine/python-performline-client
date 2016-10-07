@@ -2,25 +2,29 @@ Using the Client and Retrieving Compliance Data
 ===================================================================================================
 
 Overview
----------------------------------------------------------------------------------------------------
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-------------------------------------------------
+
 
 Products & Data
----------------------------------------------------------------------------------------------------
+-------------------------------------------------
+
+The methods in the following classes are the primary means of accessing product-specific data and,
+in general, using the API.  These classes are _mixins_, so each of the methods are available on an
+instance of :class:`~performline.client.Client()`.
+
+Mix-in Classes
+^^^^^^^^^^^^^^
 .. toctree::
    :glob:
-   :maxdepth: 3
+   :maxdepth: 1
 
-   products/*
+   products/common
+   products/web
+   products/callcenter
+   products/chatscout
 
-
-Class Reference
----------------------------------------------------------------------------------------------------
+Client Class Reference
+-------------------------------------------------
 
 .. automodule:: performline.client
    :members:

@@ -1,7 +1,5 @@
-Developer Guide
+Call Center Processing
 ===================================================================================================
 
-.. toctree::
-   :maxdepth: 1
-
-   client
+.. automodule:: performline.products.callcenter.api
+   :members:

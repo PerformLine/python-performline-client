@@ -1,7 +1,5 @@
-Developer Guide
+Web Pages
 ===================================================================================================
 
-.. toctree::
-   :maxdepth: 1
-
-   client
+.. automodule:: performline.products.web.api
+   :members:

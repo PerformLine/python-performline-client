@@ -1,7 +1,5 @@
-Developer Guide
+Chat Processing
 ===================================================================================================
 
-.. toctree::
-   :maxdepth: 1
-
-   client
+.. automodule:: performline.products.chatscout.api
+   :members:
