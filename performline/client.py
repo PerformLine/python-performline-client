@@ -56,6 +56,16 @@ class Client(
     prefix = '/'
 
     def __init__(self, token, loglevel='WARNING'):
+        """
+        Initializes a new API Client associated with a particular account.
+
+        Args:
+            token (str): The API token used to authenticate with.
+
+            loglevel (str, optional): A Python logger level name to be used by
+                the requests library (one of: 'DEBUG', 'INFO', 'WARNING',
+                'ERROR').
+        """
         self.token = token
 
         if isinstance(loglevel, str):
@@ -71,8 +81,33 @@ class Client(
         logging.basicConfig(level=self.loglevel)
 
     def request(self, method, path, data=None, params={}, headers={}):
+        """
+        Performs an HTTP request against the PerformMatch API service and
+        returns the results.
+
+        Args:
+            method (str): The HTTP method to use in the request (one of: 'GET'
+                'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD').
+
+            path (str): The path portion of the URL.
+
+            data (object, optional): The data to include in the request body.
+
+            params (dict, optional): A dict of query string parameters to include
+                in the request URL.
+
+            headers (dict, optional): A dict of HTTP headers to include in the
+                request URL.
+
+        Returns:
+            A SuccessResponse instance representing a successful response.
+
+        Raises:
+            ValueError, AuthenticationFailed, NotFound, ServiceUnavailable, ErrorResponse
+        """
+
         if not method.lower() in ALLOWED_METHODS:
-            raise Exception('Invalid request method %s' % method)
+            raise ValueError('Invalid request method %s' % method)
 
         # add token to Authorization header
         headers['Authorization'] = 'Token %s' % self.token
@@ -114,6 +149,28 @@ class Client(
                 raise ErrorResponse(response.json())
 
     def wrap_response(self, response, model, flat=False):
+        """
+        Takes a SuccessResponse and returns the results as instances of the
+        given model.
+
+        Args:
+            response (SuccessResponse): A SuccessResponse object containing the
+                data to be wrapped.
+
+            model (Model): A subclass of Model that should be used when creating
+                instances for each result in the response.
+
+            flat (bool, optional): Whether single-element lists should return
+                just that element instead of the list itself.
+
+        Returns:
+            If ``response`` contains zero results, returns `None`.
+
+            If ``response`` has one element and ``flat`` equals `True`, return the first
+            element as an instance of type ``model``.
+
+            In all other cases, return a list of instances of type ``model``.
+        """
         if isinstance(response, SuccessResponse) and response.length() > 0:
             if issubclass(model, Model):
                 models = [model(i) for i in response.results()]

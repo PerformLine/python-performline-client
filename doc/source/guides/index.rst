@@ -1,12 +1,7 @@
-PerformLine Python Client Library
+Developer Guide
 ===================================================================================================
-
-Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   quickstart
-   guides/index
-   reference
-
+   client

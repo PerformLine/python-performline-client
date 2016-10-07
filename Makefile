@@ -11,6 +11,9 @@ deps:
 test-deps:
 	pip install -I -r test-requirements.txt
 
+doc-deps:
+	pip install -I -r doc-requirements.txt
+
 just-test:
 	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || flake8
 	py.test performline/products/*/tests/*.py
@@ -28,6 +31,15 @@ clean-build:
 clean: clean-build
 	@find . -maxdepth 1 -type f -name "*.pyc" -delete
 	rm -rf venv
+
+docs-clean:
+	rm -rf doc/build/html/*
+	rm -rf doc/build/doctrees/*
+
+docs-build: docs-clean
+	@cd doc && make html
+
+docs: doc-deps docs-build
 
 package-build: clean-build
 	python setup.py sdist bdist_wheel

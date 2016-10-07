@@ -28,7 +28,27 @@ from .models import Brand, Campaign, Rule, TrafficSource
 
 
 class CommonClientMethods(object):
+    """Methods for retrieving data common to all products."""
+
     def brands(self, id=None):
+        """
+        Retrieve one or more brands associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single brand by
+                the given ID.  Otherwise, return all brands.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.Brand`
+            if ``id`` is not `None` representing the brand with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.common.models.Brand` instances of all
+            brands associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
+
         if id is None:
             response = self.request('get', '/common/brands/')
             return self.wrap_response(response, Brand)
