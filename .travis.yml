@@ -14,6 +14,6 @@ env:
 install:
   - make deps
   - make test-deps
-  - make doc-deps
+  - make docs-deps
 script:
   - make test
