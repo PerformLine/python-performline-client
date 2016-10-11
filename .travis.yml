@@ -11,9 +11,5 @@ python:
 env:
   - PERFORMLINE_API_KEY=00e4db7592541054d3791f42d62524f4139705c4
 
-install:
-  - make deps
-  - make test-deps
-  - make docs-deps
 script:
-  - make test
+  - make

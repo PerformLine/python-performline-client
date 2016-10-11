@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for i in $(find . -type f -name "*.py" | grep -v venv | grep -v egg-info | grep -v '\.tox/'); do
+for i in $(find . -type f -name "*.py" | grep -v env | grep -v egg-info | grep -v '\.tox/'); do
   if ! grep -q '^# Copyright' "${i}"; then
     echo "Prepending LICENSE to: ${i}"
     (cat LICENSE | while read line; do

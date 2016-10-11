@@ -5,7 +5,7 @@
 /.eggs
 /build
 /dist
-/venv
+/env
 __pycache__
 /doc/build
 /doc/source/api

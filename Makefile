@@ -1,43 +1,40 @@
 .PHONY: clean test deps
 
-all: venv library-prefix test
+all: env deps library-prefix test
+
+env:
+	virtualenv --distribute env
 
 deps:
-	pip install -I -r requirements.txt
-
-test-deps:
-	pip install -I -r test-requirements.txt
-
-docs-deps:
-	pip install -I -r doc-requirements.txt
+	./env/bin/pip install -I -r requirements.txt
+	./env/bin/pip install -I -r test-requirements.txt
+	./env/bin/pip install -I -r doc-requirements.txt
 
 test:
-	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || flake8
-	tox
+	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || ./env/bin/flake8 -v
+	./env/bin/tox
 
 library-prefix:
 	@bash contrib/apply-license-prefix
 
 docs-clean:
-	rm -rf doc/build/html/*
-	rm -rf doc/build/doctrees/*
+	-rm -rf doc/build/html/*
+	-rm -rf doc/build/doctrees/*
 
 clean-build:
-	test -d build && rm -rf build || true
-	test -d dist && rm -rf dist || true
-	test -d performline.egg-info && rm -rf performline.egg-info || true
+	-rm -rf build dist *.egg-info
 
 clean: clean-build docs-clean
-	@find . -maxdepth 1 -type f -name "*.pyc" -delete
-	rm -rf venv
+	-rm -rf env
+	-@find . -maxdepth 1 -type f -name "*.pyc" -delete
 
 docs-build: docs-clean
 	@cd doc && make html
 
-docs: docs-deps docs-build
+docs: deps docs-build
 
 package-build: clean-build
-	python setup.py sdist bdist_wheel
+	./env/bin/python setup.py sdist bdist_wheel
 
 package-sign:
 	cd dist && gpg \
@@ -48,10 +45,10 @@ package-sign:
 		--yes *.tar.gz
 
 package-push:
-	twine upload --skip-existing dist/*
+	./env/bin/twine upload --skip-existing dist/*
 
 package-push-test:
-	twine upload --skip-existing -r pypitest dist/*
+	./env/bin/twine upload --skip-existing -r pypitest dist/*
 
 package: deps library-prefix package-build package-sign package-push
 
