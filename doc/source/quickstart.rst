@@ -46,4 +46,4 @@ Basic Usage: Printing all Brands and Campaigns
        print("Campaign: %s" % campaign.name)
        print("  For Brand: %s (id = %d)" % (brand.name, brand.id))
        print("  Pages:     %d" % campaign.num_pages)
-       print("  Score:     %d" % campaign.num_pages)
+       print("  Score:     %s" % campaign.compliance_score)
