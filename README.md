@@ -1,6 +1,6 @@
 ![PerformMatch](https://performmatch.com/static/images/login/PM_logo-dark-blue.png "PerformMatch")
 
-# PerformMatch Compliance API [![Build Status Master](https://travis-ci.com/PerformLine/python-performline-client.svg?token=3GiX3FxnBSQCxhQkAC5R&branch=master)](https://travis-ci.com/PerformLine/python-performline-client) [![Coverage Status](https://coveralls.io/repos/github/PerformLine/python-performline-client/badge.svg?branch=master&t=lhuMBY)](https://coveralls.io/github/PerformLine/python-performline-client?branch=master) [![PyPI](https://img.shields.io/pypi/v/performline.svg)](https://pypi.python.org/pypi/performline)
+# PerformMatch Compliance API [![Build Status Master](https://travis-ci.com/PerformLine/python-performline-client.svg?token=3GiX3FxnBSQCxhQkAC5R&branch=master)](https://travis-ci.com/PerformLine/python-performline-client) [![PyPI](https://img.shields.io/pypi/v/performline.svg)](https://pypi.python.org/pypi/performline)
 
 This is the Python client library and command line interface to the [PerformMatch Compliance API](https://api.performmatch.com/).
 
