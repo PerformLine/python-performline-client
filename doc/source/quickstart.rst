@@ -24,7 +24,7 @@ running ``performline --help``.
 Basic Usage: Printing all Brands and Campaigns
 -------------------------------------------------
 
-.. code-block:: bash
+.. code-block:: python
    :linenos:
 
    from performline.client import Client
