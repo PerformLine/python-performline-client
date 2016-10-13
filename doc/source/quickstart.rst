@@ -25,16 +25,21 @@ Basic Usage: Printing all Brands and Campaigns
 .. code-block:: bash
     from performline.client import Client
 
-    c = Client("<API KEY>")
+    c = Client("YOUR-API-KEY")
 
+    # list the name and id of all brands
     for brand in c.brands():
         print("Brand: %s (id = %d)" % (brand.name, brand.id))
 
+    # list details about all campaigns
     for item in c.campaigns():
         # retrieve complete details on this campaign
-        campaign = c.campaign(item.id)
+        campaign = c.campaigns(item.id)
+
+        # load the brand associated with this campaign
         brand = campaign.brand
 
-        print("Campaign:")
+        print("Campaign: %s" % campaign.name)
         print("  For Brand: %s (id = %d)" % (brand.name, brand.id))
-
+        print("  Pages:     %d" % campaign.num_pages)
+        print("  Score:     %d" % campaign.num_pages)
