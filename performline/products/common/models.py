@@ -29,16 +29,31 @@ from ...models import Model
 
 
 class Brand(Model):
+    """An object for retrieving data from and working with an individual brand."""
     pass
+
+    # def campaigns(self):
 
 
 class Campaign(Model):
-    pass
+    """An object for retrieving data from and working with an individual campaign."""
+
+    def brand(self):
+        return self.client.brands(id=self.BrandId)
+
+    # def pages(self):
+    # def rules(self):
 
 
 class Rule(Model):
+    """An object for retrieving data from and working with an individual rule."""
     pass
+
+    # def brand(self):
+    # def campaigns(self):
+    # def pages(self):
 
 
 class TrafficSource(Model):
+    """An object for retrieving data from and working with an individual traffic source."""
     pass

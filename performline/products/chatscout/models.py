@@ -29,4 +29,8 @@ from ...models import Model
 
 
 class Chat(Model):
+    """An object for retrieving data from and working with an individual chat."""
     pass
+
+    # def campaign(self):
+    # def trafficsource(self):

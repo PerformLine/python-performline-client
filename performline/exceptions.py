@@ -29,12 +29,29 @@ from .responses import ErrorResponse
 
 
 class AuthenticationFailed(ErrorResponse):
+    """
+    An error condition indicating that the provided API key is not authorized to access
+    a given resource.
+    """
     pass
 
 
 class NotFound(ErrorResponse):
+    """
+    An error condition indicating that the requested resource does not exist.
+    """
     pass
 
 
 class ServiceUnavailable(ErrorResponse):
+    """
+    An error condition indicating that the API service is temporarily unavailable.
+    """
+    pass
+
+
+class UninitializedClient(Exception):
+    """
+    Indicates that a client instance is required to perform an operation, but one was not provided.
+    """
     pass

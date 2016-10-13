@@ -38,6 +38,32 @@ class MissingKeyException(Exception):
 
 
 def must_get(data, path):
+    """
+    Retrieve a value from the given dict, or raise a MissingKeyException if the path is not
+    present. ``path`` can also retrieve values in nested dictionaries by specifying it as
+    a slash (/) separated path:
+
+    e.g.: "path/to/key" would return 1.5 from the following dict:
+
+    {
+        "path": {
+            "to": {
+                "key": 1.5,
+            },
+        },
+    }
+
+    Args:
+        data (dict): A dictionary to retrieve a value from.
+
+        path (str): A key or slash-separated key path to retrieve from ``data``.
+
+    Returns:
+        The value pointed to by ``path``.
+
+    Raises:
+        MissingKeyException
+    """
     if not isinstance(data, dict):
         raise Exception("Response data is unavailable")
 
@@ -54,6 +80,19 @@ def must_get(data, path):
 
 
 def get(data, path, fallback=None):
+    """
+    Operates identically to :func:`performline.util.must_get()`, but will catch a
+    MissingKeyException and return a ``fallback`` value instead.
+
+    Args:
+        data (dict): A dictionary to retrieve a value from.
+
+        path (str): A key or slash-separated key path to retrieve from ``data``.
+
+    Returns:
+        The value pointed to by ``path``, or ``fallback`` if the given path does not exist.
+
+    """
     try:
         return must_get(data, path)
     except MissingKeyException:
@@ -61,6 +100,18 @@ def get(data, path, fallback=None):
 
 
 def camelize(value, upperFirst=False):
+    """
+    Convert a given string to a "camelCase" or "PascalCase" string.
+
+    Args:
+        value (str): The string to reformat.
+
+        upperFirst (bool): Whether to return the string formatted in "camelCase" (False) or
+            as "PascalCase" (True).
+
+    Returns:
+        The formatted version of ``value``.
+    """
     # split on word-separating characters (and discard them), or on capital
     # letters (preserving them)
     value = CAMEL_SPLIT.split(value)

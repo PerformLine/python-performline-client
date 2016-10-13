@@ -29,4 +29,8 @@ from ...models import Model
 
 
 class WebPage(Model):
+    """An object for retrieving data from and working with an individual page."""
     pass
+
+    # def campaign(self):
+    # def trafficsource(self):

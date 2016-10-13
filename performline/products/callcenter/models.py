@@ -29,4 +29,8 @@ from ...models import Model
 
 
 class Call(Model):
+    """An object for retrieving data from and working with an individual call."""
     pass
+
+    # def campaign(self):
+    # def trafficsource(self):

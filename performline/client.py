@@ -173,7 +173,7 @@ class Client(
         """
         if isinstance(response, SuccessResponse) and response.length() > 0:
             if issubclass(model, Model):
-                models = [model(i) for i in response.results()]
+                models = [model(i, client=self) for i in response.results()]
 
                 if flat and len(models) == 1:
                     return models[0]

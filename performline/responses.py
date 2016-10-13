@@ -29,34 +29,77 @@ from .util import get, must_get
 
 
 class Response(object):
+    """
+    Represents a standard API response.
+    """
     def __init__(self, data={}):
         self.data = data
 
     def status(self):
+        """
+        Return the status as returned from the API.
+
+        Returns:
+            "success" or "error"
+        """
         return self.must_get('Status')
 
     def must_get(self, path):
+        """See :func:`performline.util.must_get()`"""
         return must_get(self.data, path)
 
     def get(self, path, fallback=None):
+        """See :func:`performline.util.get()`"""
         return get(self.data, path, fallback)
 
 
 class SuccessResponse(Response):
+    """
+    Represents a successful response from the API, including any resulting data.
+    """
+
     def total_length(self):
+        """
+        Return the total length of all results that match the given query.
+
+        Returns:
+            int
+        """
         return self.get('ResultCount/Total', 0)
 
     def length(self):
+        """
+        Return the length of the results in the current result set, which may be less that
+        :func:`~performline.responses.total_length()` if the results were paginated.
+
+        Returns:
+            int
+        """
         return self.get('ResultCount/Current', self.total_length())
 
     def page_count(self):
+        """
+        Return the number of pages in a paginated result set (if greater than 1).
+
+        Returns:
+            int
+        """
         return self.get('ResultCount/Pages', 0)
 
     def results(self):
+        """
+        Returns a list of zero or more results.
+
+        Returns:
+            list
+        """
         return self.get('Results', [])
 
 
 class ErrorResponse(Response, Exception):
+    """
+    Represents an error response from the API with details about the error.
+    """
     def __init__(self, data={}):
         self.data = data
         self.message = self.get('ErrorDetails', self.get('ErrorMessage'))

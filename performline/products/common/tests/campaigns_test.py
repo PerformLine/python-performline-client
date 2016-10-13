@@ -58,3 +58,7 @@ class TestCampaigns(unittest.TestCase):
 
         self.assertEqual(campaign.id, 1)
         self.assertEqual(campaign.name, 'A. Foo: Content')
+
+        brand = campaign.brand()
+        self.assertEqual(brand.id, 11)
+        self.assertEqual(brand.name, 'A. Foo Industries')

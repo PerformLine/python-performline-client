@@ -28,7 +28,26 @@ from .models import Call
 
 
 class CallCenterClientMethods(object):
+    """Methods for retrieving data from the Call Center product"""
+
     def calls(self, id=None):
+        """
+        Retrieve one or more calls associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single call by
+                the given ID.  Otherwise, return all calls.
+
+        Returns:
+            An instance of :class:`~performline.products.callcenter.models.Call`
+            if ``id`` is not `None` representing the call with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.callcenter.models.Call` instances of all
+            calls associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
         if id is None:
             response = self.request('get', '/callcenter/calls/')
             return self.wrap_response(response, Call)

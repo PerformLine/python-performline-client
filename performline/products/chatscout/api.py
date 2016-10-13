@@ -28,7 +28,26 @@ from .models import Chat
 
 
 class ChatScoutClientMethods(object):
+    """Methods for retrieving data from the ChatScout product"""
+
     def chats(self, id=None):
+        """
+        Retrieve one or more chats associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single chat by
+                the given ID.  Otherwise, return all chats.
+
+        Returns:
+            An instance of :class:`~performline.products.chatscout.models.Chat`
+            if ``id`` is not `None` representing the chat with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.chatscout.models.Chat` instances of all
+            chats associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
         if id is None:
             response = self.request('get', '/chatscout/chats/')
             return self.wrap_response(response, Chat)

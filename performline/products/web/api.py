@@ -28,7 +28,26 @@ from .models import WebPage
 
 
 class WebClientMethods(object):
+    """Methods for retrieving data from the Web product"""
+
     def webpages(self, id=None):
+        """
+        Retrieve one or more web pages registered for processing on an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single page by
+                the given ID.  Otherwise, return all pages.
+
+        Returns:
+            An instance of :class:`~performline.products.web.models.WebPage`
+            if ``id`` is not `None` representing the page with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.web.models.WebPage` instances of all
+            pages associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
         if id is None:
             response = self.request('get', '/web/pages/')
             return self.wrap_response(response, WebPage)

@@ -6,12 +6,12 @@ env:
 	virtualenv --distribute env
 
 deps:
-	./env/bin/pip install -I -r requirements.txt
-	./env/bin/pip install -I -r test-requirements.txt
-	./env/bin/pip install -I -r doc-requirements.txt
+	./env/bin/pip install -q -I -r requirements.txt
+	./env/bin/pip install -q -I -r test-requirements.txt
+	./env/bin/pip install -q -I -r doc-requirements.txt
 
 test:
-	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || ./env/bin/flake8 -v
+	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || ./env/bin/flake8
 	./env/bin/tox
 
 library-prefix:
