@@ -57,6 +57,24 @@ class CommonClientMethods(object):
             return self.wrap_response(response, Brand, flat=True)
 
     def campaigns(self, id=None):
+        """
+        Retrieve one or more campaigns associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single campaign by
+                the given ID.  Otherwise, return all campaigns.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.Campaign`
+            if ``id`` is not `None` representing the campaign with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.common.models.Campaign` instances of all
+            campaigns associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
+
         if id is None:
             response = self.request('get', '/common/campaigns/')
             return self.wrap_response(response, Campaign)
@@ -65,6 +83,24 @@ class CommonClientMethods(object):
             return self.wrap_response(response, Campaign, flat=True)
 
     def rules(self, id=None):
+        """
+        Retrieve one or more rules associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single rule by
+                the given ID.  Otherwise, return all rules.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.Rule`
+            if ``id`` is not `None` representing the rule with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.common.models.Rule` instances of all
+            rules associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
+
         if id is None:
             response = self.request('get', '/common/rules/')
             return self.wrap_response(response, Rule)
@@ -73,6 +109,24 @@ class CommonClientMethods(object):
             return self.wrap_response(response, Rule, flat=True)
 
     def trafficsources(self, id=None):
+
+        """
+        Retrieve one or more traffic sources associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single traffic source by
+                the given ID.  Otherwise, return all traffic sources.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.TrafficSource`
+            if ``id`` is not `None` representing the traffic source with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.common.models.TrafficSource` instances of all
+            traffic sources associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
         if id is None:
             response = self.request('get', '/common/trafficsources/')
             return self.wrap_response(response, TrafficSource)
