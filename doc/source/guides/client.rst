@@ -4,6 +4,12 @@ Using the Client and Retrieving Compliance Data
 Overview
 -------------------------------------------------
 
+Using the PerformMatch Compliance API is fairly straightforward.  The API is accessed by way of a
+:class:`~performline.client.Client()` instance created with your API token (provided by PerformLine
+Support).  The client instance exposes methods that allow you to access the various data associated
+with your account.  To explore these methods, see the second below detailing what can be accessed for
+each product that we offer.
+
 
 Products & Data
 -------------------------------------------------

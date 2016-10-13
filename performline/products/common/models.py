@@ -22,6 +22,7 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""Models representing common API objects"""
 
 from __future__ import unicode_literals
 from __future__ import absolute_import
@@ -38,6 +39,7 @@ class Brand(Model):
 class Campaign(Model):
     """An object for retrieving data from and working with an individual campaign."""
 
+    @property
     def brand(self):
         return self.client.brands(id=self.BrandId)
 
