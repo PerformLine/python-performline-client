@@ -12,34 +12,38 @@ This library is made available for installation via the PyPi public Python packa
 repository (https://pypi.python.org/pypi/performline/).  To install it on your machine, run:
 
 .. code-block:: bash
-    pip install performline
+   :linenos:
+
+   pip install performline
 
 This will retrieve the latest version of the Python module and install it.  This will also install
-a useful command line utility called `performline`.  You can read more about using this command by
-running `performline --help`.
+a useful command line utility called ``performline``.  You can read more about using this command by
+running ``performline --help``.
 
 
 Basic Usage: Printing all Brands and Campaigns
 -------------------------------------------------
 
 .. code-block:: bash
-    from performline.client import Client
+   :linenos:
 
-    c = Client("YOUR-API-KEY")
+   from performline.client import Client
 
-    # list the name and id of all brands
-    for brand in c.brands():
-        print("Brand: %s (id = %d)" % (brand.name, brand.id))
+   c = Client("YOUR-API-KEY")
 
-    # list details about all campaigns
-    for item in c.campaigns():
-        # retrieve complete details on this campaign
-        campaign = c.campaigns(item.id)
+   # list the name and id of all brands
+   for brand in c.brands():
+       print("Brand: %s (id = %d)" % (brand.name, brand.id))
 
-        # load the brand associated with this campaign
-        brand = campaign.brand
+   # list details about all campaigns
+   for item in c.campaigns():
+       # retrieve complete details on this campaign
+       campaign = c.campaigns(item.id)
 
-        print("Campaign: %s" % campaign.name)
-        print("  For Brand: %s (id = %d)" % (brand.name, brand.id))
-        print("  Pages:     %d" % campaign.num_pages)
-        print("  Score:     %d" % campaign.num_pages)
+       # load the brand associated with this campaign
+       brand = campaign.brand
+
+       print("Campaign: %s" % campaign.name)
+       print("  For Brand: %s (id = %d)" % (brand.name, brand.id))
+       print("  Pages:     %d" % campaign.num_pages)
+       print("  Score:     %d" % campaign.num_pages)
