@@ -38,6 +38,7 @@ package-build: clean-build
 
 package-sign:
 	cd dist && gpg \
+		--local-user 5B2B38E1 \
 		--detach-sign \
 		--armor \
 		--passphrase-file ../sign.key \
@@ -50,8 +51,8 @@ package-push:
 package-push-test:
 	./env/bin/twine upload --skip-existing -r pypitest dist/*
 
-package: deps library-prefix package-build package-sign package-push
+package: deps library-prefix test package-build package-sign package-push
 
-package-test: deps library-prefix package-build package-sign package-push-test
+package-test: deps library-prefix test package-build package-sign package-push-test
 
 
