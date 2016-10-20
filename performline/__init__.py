@@ -23,5 +23,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)  # noqa
 
-version = '0.1.0a8'
+version = '0.1.0'
