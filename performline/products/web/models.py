@@ -24,12 +24,11 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Models representing Web Page API objects"""
 
-from __future__ import unicode_literals
 from __future__ import absolute_import
-from ...models import Model
+from ...embedded.stdlib.clients.rest.models import RestModel
 
 
-class WebPage(Model):
+class WebPage(RestModel):
     """An object for retrieving data from and working with an individual page."""
     pass
 

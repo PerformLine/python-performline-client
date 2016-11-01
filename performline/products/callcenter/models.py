@@ -24,12 +24,11 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Models representing Call Center API objects"""
 
-from __future__ import unicode_literals
 from __future__ import absolute_import
-from ...models import Model
+from ...embedded.stdlib.clients.rest.models import RestModel
 
 
-class Call(Model):
+class Call(RestModel):
     """An object for retrieving data from and working with an individual call."""
     pass
 

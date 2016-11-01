@@ -25,7 +25,7 @@
 
 from __future__ import absolute_import
 from .client import Client
-from .responses import ErrorResponse
+from .embedded.stdlib.clients.rest.exceptions import ErrorResponse
 from .cliutils import errout
 from .products.common.cli.brands import brands
 from .products.common.cli.campaigns import campaigns
@@ -127,4 +127,4 @@ except Exception as e:
     if isinstance(e, ErrorResponse):
         errout('The PerformMatch API encountered an error: %s' % e.message)
     else:
-        errout('Unhandled Error %s: %s' % (e.__class__.__name__, e.message))
+        raise

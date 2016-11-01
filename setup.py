@@ -25,12 +25,12 @@
 #
 
 from setuptools import setup, find_packages
-from performline import version
+from performline import client_version
 
 setup(
     name='performline',
     description='Client library for using the public PerformMatch Compliance API',
-    version=version,
+    version=client_version,
     author='PerformLine Engineering',
     author_email='tech+api@performline.com',
     url='https://github.com/PerformLine/python-performline-client',
@@ -38,6 +38,7 @@ setup(
         'click',
         'requests',
         'pyyaml',
+        'six',
     ],
     entry_points={
         'console_scripts': [

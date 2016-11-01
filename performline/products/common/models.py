@@ -24,20 +24,20 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Models representing common API objects"""
 
-from __future__ import unicode_literals
 from __future__ import absolute_import
-from ...models import Model
+from ...embedded.stdlib.clients.rest.models import RestModel
 
 
-class Brand(Model):
+class Brand(RestModel):
     """An object for retrieving data from and working with an individual brand."""
-    pass
+    rest_path = '/common/brands/'
 
     # def campaigns(self):
 
 
-class Campaign(Model):
+class Campaign(RestModel):
     """An object for retrieving data from and working with an individual campaign."""
+    rest_path = '/common/campaigns/'
 
     @property
     def brand(self):
@@ -47,15 +47,15 @@ class Campaign(Model):
     # def rules(self):
 
 
-class Rule(Model):
+class Rule(RestModel):
     """An object for retrieving data from and working with an individual rule."""
-    pass
+    rest_path = '/common/rules/'
 
     # def brand(self):
     # def campaigns(self):
     # def pages(self):
 
 
-class TrafficSource(Model):
+class TrafficSource(RestModel):
     """An object for retrieving data from and working with an individual traffic source."""
-    pass
+    rest_path = '/common/trafficsources/'

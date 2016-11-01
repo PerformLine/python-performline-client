@@ -1,5 +1,6 @@
+flake8
+httpretty
+pytest
 tox
 tox-travis
-pytest
-flake8
 twine
