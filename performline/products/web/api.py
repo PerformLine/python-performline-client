@@ -49,13 +49,6 @@ class WebClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            instances = []
-
-            for response in self.get_until('/web/pages/', **kwargs):
-                instances.extend(self.wrap_response(response, WebPage))
-
-            return instances
+            return WebPage.all(self, **kwargs)
         else:
-            return WebPage(self, {
-                'Id': id,
-            }).retrieve()
+            return WebPage.get(self, id)

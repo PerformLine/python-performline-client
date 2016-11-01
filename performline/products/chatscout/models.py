@@ -30,7 +30,7 @@ from ...embedded.stdlib.clients.rest.models import RestModel
 
 class Chat(RestModel):
     """An object for retrieving data from and working with an individual chat."""
-    pass
+    rest_root = '/chatscout/chats/'
 
     # def campaign(self):
     # def trafficsource(self):

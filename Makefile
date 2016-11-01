@@ -1,6 +1,6 @@
 .PHONY: clean test deps
 
-all: env deps embed-stdlib library-prefix test
+all: env deps performline/embedded/stdlib library-prefix test
 
 env:
 	virtualenv --distribute env
@@ -10,7 +10,7 @@ deps:
 	./env/bin/pip install -q -I -r test-requirements.txt
 	./env/bin/pip install -q -I -r doc-requirements.txt
 
-embed-stdlib:
+performline/embedded/stdlib:
 	-mkdir -p performline/embedded/stdlib
 	touch performline/embedded/__init__.py
 	rsync \

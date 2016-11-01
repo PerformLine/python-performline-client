@@ -10,10 +10,16 @@ class RestModel(object):
     Represents individual objects that can be read, created, and/or update via a given client.
 
     Args:
-        rest_path (str, abstract): The path that will be called when operating on this model
-            object.  The path will have the `format()` method called on it whenever it is used with
-            the current value of the ``data`` property passed in as `**kwargs`.  This allows you
-            to interpolate data values into the path at call time.
+        rest_root (str, abstract): The path that will be called when operating on this model
+            object.  All interactions with objects of this type will have this path prepended to
+            them when making HTTP calls.  For operations on specific instances, this value will be
+            combined with ``primary_key`` to form the final path.  For example:
+
+            If ``rest_root = '/example/'`` and ``primary_key = 'id'``, the pattern for retrieving a
+            single object will be "/example/{id}/".  This path will will then have the `format()`
+            method called on it whenever it is used with the current value of the ``data`` property
+            passed in as `**kwargs`.  This allows data values to be interpolated into the path at
+            call time.
 
             This value must be set (explictly during instantiation or implicitly in a subclass)
             before the class can be used.
@@ -28,11 +34,12 @@ class RestModel(object):
             object this instance represents.
     """
 
+    primary_key = 'id'
     rest_read_method = 'get'
     rest_create_method = 'post'
     rest_update_method = 'put'
 
-    def __init__(self, client, data, metadata={}, rest_path=None):
+    def __init__(self, client, data=None, metadata={}, rest_root=None, primary_key=None):
         """
         Provides a simplified interface for working with standard REST API responses.
 
@@ -42,20 +49,65 @@ class RestModel(object):
 
             data (dict): The dictionary that represents this model.
 
-            rest_path (str, optional): If specified, this will set or override the path this
+            rest_root (str, optional): If specified, this will set or override the base path this
                 instance uses to retrieve or persist data.
+
+            primary_key (str, optional): If specified, this field name will be used for all
+                operations that occur on a specific instance of this object.
         """
 
-        if rest_path is not None:
-            self.rest_path = rest_path
+        if rest_root is not None:
+            self.rest_root = rest_root
 
-        if not hasattr(self, 'rest_path') or self.rest_path is None:
+        if primary_key is not None:
+            self.primary_key = primary_key
+
+        if not hasattr(self, 'rest_root') or self.rest_root is None:
             raise AttributeError("Cannot create RestModel instance without a "
-                                 "valid 'rest_path' attribute")
+                                 "valid 'rest_root' attribute")
+
+        if not hasattr(self, 'primary_key') or self.primary_key is None:
+            raise AttributeError("Cannot create RestModel instance without a "
+                                 "valid 'primary_key' attribute")
 
         self.__metadata = metadata
         self._client = client
-        self.set_data(data)
+
+        if data is not None:
+            self.set_data(data)
+
+    @classmethod
+    def get(cls, client, pk):
+        return cls(client, {
+            cls.primary_key: pk,
+        }).retrieve()
+
+    @classmethod
+    def all(cls, client, **kwargs):
+        items = []
+
+        for response in client.get_until(cls.rest_root, **kwargs):
+            # for each result
+            for item in response.results():
+                # format the list result item the same way formatted_path would
+                item = underscore_dict(item)
+
+                # get the value of the primary key field
+                pk = item.get(cls.primary_key)
+
+                if pk is not None:
+                    instance = cls(client, {
+                        cls.primary_key: pk,
+                    })
+
+                    instance.retrieve()
+                    items.append(instance)
+
+        return items
+
+    @property
+    def pk(self):
+        return self._data.get(self.primary_key)
 
     @property
     def _data(self):
@@ -73,9 +125,13 @@ class RestModel(object):
     def _metadata(self):
         return self.__metadata
 
+    @property
+    def instance_path(self):
+        return self.rest_root.rstrip('/') + '/{' + self.primary_key.strip('/') + '}/'
+
     def formatted_path(self, additional_args={}):
         """
-        Returns the ``rest_path`` with data (and, if specified, additional/override arguments)
+        Returns the ``instance_path`` with data (and, if specified, additional/override arguments)
         interpolated in.  This method uses the standard Python ``format()`` function.
 
         Returns:
@@ -88,7 +144,7 @@ class RestModel(object):
             kwa[k] = getattr(self, k)
 
         kwa.update(additional_args)
-        return self.rest_path.format(**kwa)
+        return self.instance_path.format(**kwa)
 
     def set_data(self, data):
         """

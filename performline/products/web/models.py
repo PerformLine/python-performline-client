@@ -30,7 +30,7 @@ from ...embedded.stdlib.clients.rest.models import RestModel
 
 class WebPage(RestModel):
     """An object for retrieving data from and working with an individual page."""
-    pass
+    rest_root = '/web/pages/'
 
     # def campaign(self):
     # def trafficsource(self):

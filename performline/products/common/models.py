@@ -30,18 +30,18 @@ from ...embedded.stdlib.clients.rest.models import RestModel
 
 class Brand(RestModel):
     """An object for retrieving data from and working with an individual brand."""
-    rest_path = '/common/brands/'
+    rest_root = '/common/brands/'
 
     # def campaigns(self):
 
 
 class Campaign(RestModel):
     """An object for retrieving data from and working with an individual campaign."""
-    rest_path = '/common/campaigns/'
+    rest_root = '/common/campaigns/'
 
     @property
     def brand(self):
-        return self.client.brands(id=self.id)
+        return Brand.get(self.client, self.brand_id)
 
     # def pages(self):
     # def rules(self):
@@ -49,7 +49,7 @@ class Campaign(RestModel):
 
 class Rule(RestModel):
     """An object for retrieving data from and working with an individual rule."""
-    rest_path = '/common/rules/'
+    rest_root = '/common/rules/'
 
     # def brand(self):
     # def campaigns(self):
@@ -58,4 +58,4 @@ class Rule(RestModel):
 
 class TrafficSource(RestModel):
     """An object for retrieving data from and working with an individual traffic source."""
-    rest_path = '/common/trafficsources/'
+    rest_root = '/common/trafficsources/'

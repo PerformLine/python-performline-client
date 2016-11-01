@@ -30,7 +30,7 @@ from ...embedded.stdlib.clients.rest.models import RestModel
 
 class Call(RestModel):
     """An object for retrieving data from and working with an individual call."""
-    pass
+    rest_root = '/callcenter/calls/'
 
     # def campaign(self):
     # def trafficsource(self):

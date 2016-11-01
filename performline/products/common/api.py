@@ -48,18 +48,10 @@ class CommonClientMethods(object):
         Raises:
             See :func:`~performline.client.Client.request`
         """
-
         if id is None:
-            instances = []
-
-            for response in self.get_until('/common/brands/', **kwargs):
-                instances.extend(self.wrap_response(response, Brand))
-
-            return instances
+            return Brand.all(self, **kwargs)
         else:
-            return Brand(self, {
-                'Id': id,
-            }).retrieve()
+            return Brand.get(self, id)
 
     def campaigns(self, id=None, **kwargs):
         """
@@ -81,16 +73,9 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            instances = []
-
-            for response in self.get_until('/common/campaigns/', **kwargs):
-                instances.extend(self.wrap_response(response, Campaign))
-
-            return instances
+            return Campaign.all(self, **kwargs)
         else:
-            return Campaign(self, {
-                'Id': id,
-            }).retrieve()
+            return Campaign.get(self, id)
 
     def rules(self, id=None, **kwargs):
         """
@@ -110,18 +95,10 @@ class CommonClientMethods(object):
         Raises:
             See :func:`~performline.client.Client.request`
         """
-
         if id is None:
-            instances = []
-
-            for response in self.get_until('/common/rules/', **kwargs):
-                instances.extend(self.wrap_response(response, Rule))
-
-            return instances
+            return Rule.all(self, **kwargs)
         else:
-            return Rule(self, {
-                'Id': id,
-            }).retrieve()
+            return Rule.get(self, id)
 
     def trafficsources(self, id=None, **kwargs):
 
@@ -143,13 +120,6 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            instances = []
-
-            for response in self.get_until('/common/trafficsources/', **kwargs):
-                instances.extend(self.wrap_response(response, TrafficSource))
-
-            return instances
+            return TrafficSource.all(self, **kwargs)
         else:
-            return TrafficSource(self, {
-                'Id': id,
-            }).retrieve()
+            return TrafficSource.get(self, id)

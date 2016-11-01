@@ -49,13 +49,6 @@ class ChatScoutClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            instances = []
-
-            for response in self.get_until('/chatscout/chats/', **kwargs):
-                instances.extend(self.wrap_response(response, Chat))
-
-            return instances
+            return Chat.all(self, **kwargs)
         else:
-            return Chat(self, {
-                'Id': id,
-            }).retrieve()
+            return Chat.get(self, id)

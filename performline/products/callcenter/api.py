@@ -49,13 +49,6 @@ class CallCenterClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            instances = []
-
-            for response in self.get_until('/callcenter/calls/', **kwargs):
-                instances.extend(self.wrap_response(response, Call))
-
-            return instances
+            return Call.all(self, **kwargs)
         else:
-            return Call(self, {
-                'Id': id,
-            }).retrieve()
+            return Call.get(self, id)

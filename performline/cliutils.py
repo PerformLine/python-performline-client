@@ -52,6 +52,9 @@ def out(state, data=None):
     if data is None:
         return
 
+    if isinstance(data, (list, dict)) and len(data) == 0:
+        return
+
     if state.fmt == 'json':
         rv = json.dumps(data, indent=4)
     elif state.fmt == 'yaml':
