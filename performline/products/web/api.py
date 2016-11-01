@@ -30,7 +30,7 @@ from .models import WebPage
 class WebClientMethods(object):
     """Methods for retrieving data from the Web product"""
 
-    def webpages(self, id=None):
+    def webpages(self, id=None, **kwargs):
         """
         Retrieve one or more web pages registered for processing on an account.
 
@@ -49,8 +49,13 @@ class WebClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            response = self.request('get', '/web/pages/')
-            return self.wrap_response(response, WebPage)
+            instances = []
+
+            for response in self.get_until('/web/pages/', **kwargs):
+                instances.extend(self.wrap_response(response, WebPage))
+
+            return instances
         else:
-            response = self.request('get', '/web/pages/%d/' % id)
-            return self.wrap_response(response, WebPage, flat=True)
+            return WebPage(self, {
+                'Id': id,
+            }).retrieve()

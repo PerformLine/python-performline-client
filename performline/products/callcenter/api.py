@@ -30,7 +30,7 @@ from .models import Call
 class CallCenterClientMethods(object):
     """Methods for retrieving data from the Call Center product"""
 
-    def calls(self, id=None):
+    def calls(self, id=None, **kwargs):
         """
         Retrieve one or more calls associated with an account.
 
@@ -49,8 +49,13 @@ class CallCenterClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            response = self.request('get', '/callcenter/calls/')
-            return self.wrap_response(response, Call)
+            instances = []
+
+            for response in self.get_until('/callcenter/calls/', **kwargs):
+                instances.extend(self.wrap_response(response, Call))
+
+            return instances
         else:
-            response = self.request('get', '/callcenter/calls/%d/' % id)
-            return self.wrap_response(response, Call, flat=True)
+            return Call(self, {
+                'Id': id,
+            }).retrieve()

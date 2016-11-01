@@ -34,17 +34,22 @@ class TestBrands(unittest.TestCase):
         self.client = client()
 
     def test_get_all_brands(self):
-        brands = self.client.brands()
+        brands = self.client.brands(params={
+            'limit': 1
+        })
 
         self.assertIsInstance(brands, list)
         self.assertTrue(len(brands) >= 3)
 
+        self.assertIsInstance(brands[0], Brand)
         self.assertEqual(brands[0].id, 11)
         self.assertEqual(brands[0].name, 'A. Foo Industries')
 
+        self.assertIsInstance(brands[1], Brand)
         self.assertEqual(brands[1].id, 12)
         self.assertEqual(brands[1].name, 'BAR, Inc.')
 
+        self.assertIsInstance(brands[2], Brand)
         self.assertEqual(brands[2].id, 13)
         self.assertEqual(brands[2].name, 'Baz Media')
 

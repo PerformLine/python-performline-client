@@ -30,7 +30,7 @@ from .models import Brand, Campaign, Rule, TrafficSource
 class CommonClientMethods(object):
     """Methods for retrieving data common to all products."""
 
-    def brands(self, id=None):
+    def brands(self, id=None, **kwargs):
         """
         Retrieve one or more brands associated with an account.
 
@@ -50,14 +50,18 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            response = self.request('get', '/common/brands/')
-            return self.wrap_response(response, Brand)
+            instances = []
+
+            for response in self.get_until('/common/brands/', **kwargs):
+                instances.extend(self.wrap_response(response, Brand))
+
+            return instances
         else:
             return Brand(self, {
                 'Id': id,
             }).retrieve()
 
-    def campaigns(self, id=None):
+    def campaigns(self, id=None, **kwargs):
         """
         Retrieve one or more campaigns associated with an account.
 
@@ -77,14 +81,18 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            response = self.request('get', '/common/campaigns/')
-            return self.wrap_response(response, Campaign)
+            instances = []
+
+            for response in self.get_until('/common/campaigns/', **kwargs):
+                instances.extend(self.wrap_response(response, Campaign))
+
+            return instances
         else:
             return Campaign(self, {
                 'Id': id,
             }).retrieve()
 
-    def rules(self, id=None):
+    def rules(self, id=None, **kwargs):
         """
         Retrieve one or more rules associated with an account.
 
@@ -104,14 +112,18 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            response = self.request('get', '/common/rules/')
-            return self.wrap_response(response, Rule)
+            instances = []
+
+            for response in self.get_until('/common/rules/', **kwargs):
+                instances.extend(self.wrap_response(response, Rule))
+
+            return instances
         else:
             return Rule(self, {
                 'Id': id,
             }).retrieve()
 
-    def trafficsources(self, id=None):
+    def trafficsources(self, id=None, **kwargs):
 
         """
         Retrieve one or more traffic sources associated with an account.
@@ -131,8 +143,12 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            response = self.request('get', '/common/trafficsources/')
-            return self.wrap_response(response, TrafficSource)
+            instances = []
+
+            for response in self.get_until('/common/trafficsources/', **kwargs):
+                instances.extend(self.wrap_response(response, TrafficSource))
+
+            return instances
         else:
             return TrafficSource(self, {
                 'Id': id,

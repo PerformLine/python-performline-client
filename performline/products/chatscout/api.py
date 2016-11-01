@@ -30,7 +30,7 @@ from .models import Chat
 class ChatScoutClientMethods(object):
     """Methods for retrieving data from the ChatScout product"""
 
-    def chats(self, id=None):
+    def chats(self, id=None, **kwargs):
         """
         Retrieve one or more chats associated with an account.
 
@@ -49,8 +49,13 @@ class ChatScoutClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            response = self.request('get', '/chatscout/chats/')
-            return self.wrap_response(response, Chat)
+            instances = []
+
+            for response in self.get_until('/chatscout/chats/', **kwargs):
+                instances.extend(self.wrap_response(response, Chat))
+
+            return instances
         else:
-            response = self.request('get', '/chatscout/chats/%d/' % id)
-            return self.wrap_response(response, Chat, flat=True)
+            return Chat(self, {
+                'Id': id,
+            }).retrieve()
