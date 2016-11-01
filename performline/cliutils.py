@@ -31,8 +31,8 @@ import yaml
 
 
 def normalize(data):
-    if hasattr(data, 'to_dict'):
-        data = data.to_dict()
+    if hasattr(data, '__dict__'):
+        data = data.__dict__()
     elif isinstance(data, list):
         if len(data) > 0:
             data = [normalize(i) for i in data]
