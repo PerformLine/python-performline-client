@@ -187,9 +187,8 @@ class StandardRestClient(object):
         except requests.exceptions.SSLError:
             raise
         except requests.exceptions.ConnectionError as e:
-            raise
-            #raise BadGateway(message="Failed to connect to '{0}'"
-#                             .format(e.request.url), exception=e)
+            raise BadGateway(message="Failed to connect to '{0}'"
+                             .format(e.request.url), exception=e)
 
         # check for endpoint deprecation, and raise an error if the endpoint cutoff date is
         # in the past.

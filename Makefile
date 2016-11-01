@@ -17,8 +17,9 @@ embed-stdlib:
 		--archive \
 		--verbose \
 		--delete-after \
-		--filter='- *.pyc' \
-		--filter='- __pycache__/' \
+		--filter='H *.pyc' \
+		--filter='H __pycache__/' \
+		--filter='H *_test.py' \
 		--filter='+ /__init__.py' \
 		--filter='+ /utils/' \
 		--filter='+ /utils/*.py' \
@@ -26,7 +27,7 @@ embed-stdlib:
 		--filter='+ /clients/__init__.py' \
 		--filter='+ /clients/rest/' \
 		--filter='+ /clients/rest/**' \
-		--filter='- *' \
+		--filter='H *' \
 		../python-performline-stdlib/performline/ ./performline/embedded/stdlib/
 
 test:

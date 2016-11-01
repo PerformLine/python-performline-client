@@ -53,8 +53,9 @@ class CommonClientMethods(object):
             response = self.request('get', '/common/brands/')
             return self.wrap_response(response, Brand)
         else:
-            response = self.request('get', '/common/brands/%d/' % id)
-            return self.wrap_response(response, Brand, flat=True)
+            return Brand(self, {
+                'Id': id,
+            }).retrieve()
 
     def campaigns(self, id=None):
         """
@@ -79,8 +80,9 @@ class CommonClientMethods(object):
             response = self.request('get', '/common/campaigns/')
             return self.wrap_response(response, Campaign)
         else:
-            response = self.request('get', '/common/campaigns/%d/' % id)
-            return self.wrap_response(response, Campaign, flat=True)
+            return Campaign(self, {
+                'Id': id,
+            }).retrieve()
 
     def rules(self, id=None):
         """
@@ -105,8 +107,9 @@ class CommonClientMethods(object):
             response = self.request('get', '/common/rules/')
             return self.wrap_response(response, Rule)
         else:
-            response = self.request('get', '/common/rules/%d/' % id)
-            return self.wrap_response(response, Rule, flat=True)
+            return Rule(self, {
+                'Id': id,
+            }).retrieve()
 
     def trafficsources(self, id=None):
 
@@ -131,5 +134,6 @@ class CommonClientMethods(object):
             response = self.request('get', '/common/trafficsources/')
             return self.wrap_response(response, TrafficSource)
         else:
-            response = self.request('get', '/common/trafficsources/%d/' % id)
-            return self.wrap_response(response, TrafficSource, flat=True)
+            return TrafficSource(self, {
+                'Id': id,
+            }).retrieve()

@@ -41,7 +41,7 @@ class Campaign(RestModel):
 
     @property
     def brand(self):
-        return self.client.brands(id=self.BrandId)
+        return self.client.brands(id=self.id)
 
     # def pages(self):
     # def rules(self):
