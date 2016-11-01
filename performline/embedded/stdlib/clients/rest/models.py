@@ -83,7 +83,7 @@ class RestModel(object):
         }).retrieve()
 
     @classmethod
-    def all(cls, client, **kwargs):
+    def all(cls, client, autoload=True, **kwargs):
         items = []
 
         for response in client.get_until(cls.rest_root, **kwargs):
@@ -100,7 +100,9 @@ class RestModel(object):
                         cls.primary_key: pk,
                     })
 
-                    instance.retrieve()
+                    if autoload:
+                        instance.retrieve()
+
                     items.append(instance)
 
         return items

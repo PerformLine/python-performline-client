@@ -43,11 +43,13 @@ docs-clean:
 clean-build:
 	-rm -rf build dist *.egg-info
 
-clean: clean-build docs-clean
-	-rm -rf env
+clean-cache:
+	-rm -rf build dist
 	-find . -type f -name "*.pyc" -delete
 	-find . -type d -name "__pycache__" -delete
-	-@find . -maxdepth 1 -type f -name "*.pyc" -delete
+
+clean: clean-build docs-clean clean-cache
+	-rm -rf env
 
 docs-build: docs-clean
 	@cd doc && make html
@@ -72,8 +74,8 @@ package-push:
 package-push-test:
 	./env/bin/twine upload --skip-existing -r pypitest dist/*
 
-package: deps library-prefix test package-build package-sign package-push
+package: deps library-prefix test package-build package-sign package-push clean-cache
 
-package-test: deps library-prefix test package-build package-sign package-push-test
+package-test: deps library-prefix test package-build package-sign package-push-test clean-cache
 
 
