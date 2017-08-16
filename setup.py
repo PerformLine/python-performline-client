@@ -29,7 +29,7 @@ from performline import client_version
 
 setup(
     name='performline',
-    description='Client library for using the public PerformMatch Compliance API',
+    description='Client library for using the public PerformLine Compliance API',
     version=client_version,
     author='PerformLine Engineering',
     author_email='tech+api@performline.com',
