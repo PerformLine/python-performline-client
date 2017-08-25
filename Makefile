@@ -69,10 +69,10 @@ package-sign:
 		--yes *.tar.gz
 
 package-push:
-	./env/bin/twine upload --skip-existing dist/*
+	./env/bin/twine upload --config-file $(or $$PYPIRC,$$PYPIRC,~/.pypirc) --skip-existing dist/*
 
 package-push-test:
-	./env/bin/twine upload --skip-existing -r pypitest dist/*
+	./env/bin/twine upload --config-file $(or $$PYPIRC,$$PYPIRC,~/.pypirc) --skip-existing -r pypitest dist/*
 
 package: deps library-prefix test package-build package-sign package-push clean-cache
 
