@@ -27,4 +27,4 @@ from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)  # noqa
 
 
-client_version = '0.2.3'
+client_version = '0.3.0'
