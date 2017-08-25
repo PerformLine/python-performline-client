@@ -46,7 +46,7 @@ class Client(
 ):
     """PerformLine API Client"""
 
-    url = 'https://api.performmatch.com'
+    url = 'https://api.performline.com'
     prefix = '/'
 
     def __init__(self, token, *args, **kwargs):

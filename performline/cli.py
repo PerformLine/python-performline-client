@@ -69,7 +69,7 @@ class State(object):
 @click.option('--api-host',
               metavar='URL',
               help=(
-                  'The URL to use to connect to the PerformMatch API service '
+                  'The URL to use to connect to the PerformLine API service '
                   '(this should normally not need to be changed)\n'
                   '[$PERFORMLINE_API_URL]'
               ),
@@ -104,7 +104,7 @@ def main(ctx,
          api_endpoint_prefix,
          log_level,
          format):
-    """PerformMatch Compliance API client utility"""
+    """PerformLine Compliance API client utility"""
     ctx.obj = State(ctx, {
         'token': api_key,
         'url': api_host,
@@ -112,6 +112,7 @@ def main(ctx,
         'loglevel': log_level,
         'format': format,
     })
+
 
 main.add_command(brands)
 main.add_command(calls)
@@ -125,6 +126,6 @@ try:
     main(auto_envvar_prefix='PERFORMLINE')
 except Exception as e:
     if isinstance(e, ErrorResponse):
-        errout('The PerformMatch API encountered an error: %s' % e.message)
+        errout('The PerformLine API encountered an error: %s' % e.message)
     else:
         raise

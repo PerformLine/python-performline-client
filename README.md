@@ -1,14 +1,14 @@
-![PerformMatch](https://performmatch.com/static/images/login/PM_logo-dark-blue.png "PerformMatch")
+![PerformLine](https://s3.amazonaws.com/performline-assets/images/PL_Logo_Blue-Gray_Tagline_FINAL.png "PerformLine")
 
-# PerformMatch Compliance API [![Build Status Master](https://travis-ci.com/PerformLine/python-performline-client.svg?token=3GiX3FxnBSQCxhQkAC5R&branch=master)](https://travis-ci.com/PerformLine/python-performline-client) [![PyPI](https://img.shields.io/pypi/v/performline.svg)](https://pypi.python.org/pypi/performline) [![Documentation Status](https://readthedocs.org/projects/performline/badge/?version=latest)](http://performline.readthedocs.io/en/latest/?badge=latest)
+# PerformLine Compliance API [![Build Status Master](https://travis-ci.com/PerformLine/python-performline-client.svg?token=3GiX3FxnBSQCxhQkAC5R&branch=master)](https://travis-ci.com/PerformLine/python-performline-client) [![PyPI](https://img.shields.io/pypi/v/performline.svg)](https://pypi.python.org/pypi/performline) [![Documentation Status](https://readthedocs.org/projects/performline/badge/?version=latest)](http://performline.readthedocs.io/en/latest/?badge=latest)
 
-This is the Python client library and command line interface to the [PerformMatch Compliance API](https://api.performmatch.com/).
+This is the Python client library and command line interface to the [PerformLine Compliance API](https://api.performline.com/).
 
 ## Documentation
 
 Documentation for this package is located here: http://performline.readthedocs.io/en/latest/
 
-The REST API specification and usage documentation can be found at https://api.performmatch.com.
+The REST API specification and usage documentation can be found at https://api.performline.com.
 
 
 ## Quickstart
