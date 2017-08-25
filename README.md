@@ -1,4 +1,4 @@
-![PerformLine](https://app.performline.com/static/images/login/PM_logo-dark-blue.png "PerformLine")
+![PerformLine](https://s3.amazonaws.com/performline-assets/images/PL_Logo_Blue-Gray_Tagline_FINAL.png "PerformLine")
 
 # PerformLine Compliance API [![Build Status Master](https://travis-ci.com/PerformLine/python-performline-client.svg?token=3GiX3FxnBSQCxhQkAC5R&branch=master)](https://travis-ci.com/PerformLine/python-performline-client) [![PyPI](https://img.shields.io/pypi/v/performline.svg)](https://pypi.python.org/pypi/performline) [![Documentation Status](https://readthedocs.org/projects/performline/badge/?version=latest)](http://performline.readthedocs.io/en/latest/?badge=latest)
 
