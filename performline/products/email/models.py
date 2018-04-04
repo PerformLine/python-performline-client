@@ -22,7 +22,7 @@
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""Models representing Web Page API objects"""
+"""Models representing Email API objects"""
 
 from __future__ import absolute_import
 from ...embedded.stdlib.clients.rest.models import RestModel
@@ -30,4 +30,4 @@ from ...embedded.stdlib.clients.rest.models import RestModel
 
 class EmailMessage(RestModel):
     """An object for retrieving data from and working with an individual page."""
-    rest_root = '/email/messages/'
+    rest_root = '/email/'
