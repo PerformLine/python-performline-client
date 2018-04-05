@@ -31,6 +31,7 @@ from .products.common.api import CommonClientMethods
 from .products.web.api import WebClientMethods
 from .products.callcenter.api import CallCenterClientMethods
 from .products.chatscout.api import ChatScoutClientMethods
+from .products.email.api import EmailClientMethods
 
 
 ALLOWED_METHODS = ['get', 'post', 'put', 'delete', 'options', 'head']
@@ -38,6 +39,7 @@ RX_TRIM_SLASH = r'(?:^/*|/*$)'
 
 
 class Client(
+    EmailClientMethods,
     ChatScoutClientMethods,
     CallCenterClientMethods,
     WebClientMethods,

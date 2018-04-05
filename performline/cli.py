@@ -34,6 +34,7 @@ from .products.common.cli.trafficsources import sources
 from .products.web.cli.pages import pages
 from .products.callcenter.cli.calls import calls
 from .products.chatscout.cli.chats import chats
+from .products.email.cli.messages import messages
 import click
 
 
@@ -121,6 +122,7 @@ main.add_command(chats)
 main.add_command(pages)
 main.add_command(rules)
 main.add_command(sources)
+main.add_command(messages)
 
 try:
     main(auto_envvar_prefix='PERFORMLINE')

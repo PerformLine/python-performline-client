@@ -24,7 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import absolute_import
-from .models import WebPage
+from .models import EmailMessage
 
 
 class EmailClientMethods(object):

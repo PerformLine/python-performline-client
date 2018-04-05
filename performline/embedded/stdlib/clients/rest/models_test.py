@@ -7,11 +7,11 @@ from . import StandardRestClient
 from .utils import make_response
 
 
-class TestGetAllModel(RestModel):
+class TGetAllModel(RestModel):
     rest_root = '/get-all/'
 
 
-class TestGetByIdModel(RestModel):
+class TGetByIdModel(RestModel):
     rest_root = '/get-by-id/'
 
 
@@ -79,25 +79,25 @@ class RestModelTest(TestCase):
 
         client = StandardRestClient(url='http://test-rest-getall')
 
-        items = TestGetAllModel.all(client)
+        items = TGetAllModel.all(client)
 
         httpretty.disable()
 
         self.assertEqual(len(items), 3)
 
-        self.assertIsInstance(items[0], TestGetAllModel)
+        self.assertIsInstance(items[0], TGetAllModel)
         self.assertEqual(items[0].id, 1)
         self.assertEqual(items[0].Id, 1)
         self.assertEqual(items[0].name, 'First')
         self.assertEqual(items[0].Name, 'First')
 
-        self.assertIsInstance(items[1], TestGetAllModel)
+        self.assertIsInstance(items[1], TGetAllModel)
         self.assertEqual(items[1].id, 2)
         self.assertEqual(items[1].Id, 2)
         self.assertEqual(items[1].name, 'Second')
         self.assertEqual(items[1].Name, 'Second')
 
-        self.assertIsInstance(items[2], TestGetAllModel)
+        self.assertIsInstance(items[2], TGetAllModel)
         self.assertEqual(items[2].id, 3)
         self.assertEqual(items[2].Id, 3)
         self.assertEqual(items[2].name, 'Third')
@@ -118,25 +118,25 @@ class RestModelTest(TestCase):
 
         client = StandardRestClient(url='http://test-rest-getall')
 
-        items = TestGetAllModel.all(client, autoload=False)
+        items = TGetAllModel.all(client, autoload=False)
 
         httpretty.disable()
 
         self.assertEqual(len(items), 3)
 
-        self.assertIsInstance(items[0], TestGetAllModel)
+        self.assertIsInstance(items[0], TGetAllModel)
         self.assertEqual(items[0].id, 1)
         self.assertEqual(items[0].Id, 1)
         self.assertIsNone(items[0].name)
         self.assertIsNone(items[0].Name)
 
-        self.assertIsInstance(items[1], TestGetAllModel)
+        self.assertIsInstance(items[1], TGetAllModel)
         self.assertEqual(items[1].id, 2)
         self.assertEqual(items[1].Id, 2)
         self.assertIsNone(items[1].name)
         self.assertIsNone(items[1].Name)
 
-        self.assertIsInstance(items[2], TestGetAllModel)
+        self.assertIsInstance(items[2], TGetAllModel)
         self.assertEqual(items[2].id, 3)
         self.assertEqual(items[2].Id, 3)
         self.assertIsNone(items[2].name)
@@ -155,11 +155,11 @@ class RestModelTest(TestCase):
 
         client = StandardRestClient(url='http://test-rest-getbyid')
 
-        item = TestGetByIdModel.get(client, 12345)
+        item = TGetByIdModel.get(client, 12345)
 
         httpretty.disable()
 
-        self.assertIsInstance(item, TestGetByIdModel)
+        self.assertIsInstance(item, TGetByIdModel)
         self.assertEqual(item.id, 12345)
         self.assertEqual(item.Id, 12345)
         self.assertEqual(item.name, 'Test Data')

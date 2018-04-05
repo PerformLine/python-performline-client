@@ -30,4 +30,4 @@ from ...embedded.stdlib.clients.rest.models import RestModel
 
 class EmailMessage(RestModel):
     """An object for retrieving data from and working with an individual page."""
-    rest_root = '/email/'
+    rest_root = '/email/messages'

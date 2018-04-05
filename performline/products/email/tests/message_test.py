@@ -26,13 +26,15 @@
 from __future__ import unicode_literals
 import unittest
 from ....testing import client
+import pytest
 
 
 class TestMessages(unittest.TestCase):
     def setUp(self):
         self.client = client()
 
-    def test_get_all_pages(self):
+    @pytest.mark.skip(reason='Waiting for test fixtures')
+    def test_get_all_messages(self):
         messages = self.client.email_messages()
         self.assertIsInstance(messages, list)
         self.assertTrue(len(messages) > 0)
