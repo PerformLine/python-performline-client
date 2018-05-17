@@ -1,21 +1,26 @@
 from __future__ import absolute_import
-import httpretty
-import json
+import requests
+import requests_mock
 from unittest import TestCase
 from .models import RestModel
 from . import StandardRestClient
 from .utils import make_response
 
 
-class TestGetAllModel(RestModel):
+class MyCoolGetAllModel(RestModel):
     rest_root = '/get-all/'
 
 
-class TestGetByIdModel(RestModel):
+class MyCoolGetByIdModel(RestModel):
     rest_root = '/get-by-id/'
 
 
 class RestModelTest(TestCase):
+    def setUp(self):
+        self.session = requests.Session()
+        self.adapter = requests_mock.Adapter()
+        self.session.mount('mock', self.adapter)
+
     def test_formatted_path(self):
         model = RestModel(None, {
             'Id': 4,
@@ -41,125 +46,103 @@ class RestModelTest(TestCase):
             self.assertEqual(model.formatted_path(), '/test/5/')
 
     def test_get_all(self):
-        httpretty.enable()
-        httpretty.register_uri(httpretty.GET,
-                               "http://test-rest-getall/get-all/",
-                               content_type='application/json',
-                               body=json.dumps(make_response([{
-                                   'Id': 1,
-                               }, {
-                                   'Id': 2,
-                               }, {
-                                   'Id': 3,
-                               }])))
+        self.adapter.register_uri('GET', 'mock://test-rest-getall/get-all/',
+                                  json=make_response([{
+                                      'Id': 1,
+                                  }, {
+                                      'Id': 2,
+                                  }, {
+                                      'Id': 3,
+                                  }]))
 
-        httpretty.register_uri(httpretty.GET,
-                               "http://test-rest-getall/get-all/1/",
-                               content_type='application/json',
-                               body=json.dumps(make_response({
-                                   'Id': 1,
-                                   'Name': 'First',
-                               })))
+        self.adapter.register_uri('GET', 'mock://test-rest-getall/get-all/1/',
+                                  json=make_response({
+                                    'Id': 1,
+                                    'Name': 'First',
+                                  }))
 
-        httpretty.register_uri(httpretty.GET,
-                               "http://test-rest-getall/get-all/2/",
-                               content_type='application/json',
-                               body=json.dumps(make_response({
-                                   'Id': 2,
-                                   'Name': 'Second',
-                               })))
+        self.adapter.register_uri('GET', 'mock://test-rest-getall/get-all/2/',
+                                  json=make_response({
+                                      'Id': 2,
+                                      'Name': 'Second',
+                                  }))
 
-        httpretty.register_uri(httpretty.GET,
-                               "http://test-rest-getall/get-all/3/",
-                               content_type='application/json',
-                               body=json.dumps(make_response({
-                                   'Id': 3,
-                                   'Name': 'Third',
-                               })))
+        self.adapter.register_uri('GET', 'mock://test-rest-getall/get-all/3/',
+                                  json=make_response({
+                                      'Id': 3,
+                                      'Name': 'Third',
+                                  }))
 
-        client = StandardRestClient(url='http://test-rest-getall')
+        client = StandardRestClient(url='mock://test-rest-getall', session=self.session)
 
-        items = TestGetAllModel.all(client)
-
-        httpretty.disable()
+        items = MyCoolGetAllModel.all(client)
 
         self.assertEqual(len(items), 3)
 
-        self.assertIsInstance(items[0], TestGetAllModel)
+        self.assertIsInstance(items[0], MyCoolGetAllModel)
         self.assertEqual(items[0].id, 1)
         self.assertEqual(items[0].Id, 1)
         self.assertEqual(items[0].name, 'First')
         self.assertEqual(items[0].Name, 'First')
 
-        self.assertIsInstance(items[1], TestGetAllModel)
+        self.assertIsInstance(items[1], MyCoolGetAllModel)
         self.assertEqual(items[1].id, 2)
         self.assertEqual(items[1].Id, 2)
         self.assertEqual(items[1].name, 'Second')
         self.assertEqual(items[1].Name, 'Second')
 
-        self.assertIsInstance(items[2], TestGetAllModel)
+        self.assertIsInstance(items[2], MyCoolGetAllModel)
         self.assertEqual(items[2].id, 3)
         self.assertEqual(items[2].Id, 3)
         self.assertEqual(items[2].name, 'Third')
         self.assertEqual(items[2].Name, 'Third')
 
     def test_get_all_no_autoload(self):
-        httpretty.enable()
-        httpretty.register_uri(httpretty.GET,
-                               "http://test-rest-getall/get-all/",
-                               content_type='application/json',
-                               body=json.dumps(make_response([{
-                                   'Id': 1,
-                               }, {
-                                   'Id': 2,
-                               }, {
-                                   'Id': 3,
-                               }])))
+        self.adapter.register_uri('GET', 'mock://test-rest-getall/get-all/',
+                                  json=make_response([{
+                                       'Id': 1,
+                                   }, {
+                                       'Id': 2,
+                                   }, {
+                                       'Id': 3,
+                                   }]))
 
-        client = StandardRestClient(url='http://test-rest-getall')
+        client = StandardRestClient(url='mock://test-rest-getall', session=self.session)
 
-        items = TestGetAllModel.all(client, autoload=False)
-
-        httpretty.disable()
+        items = MyCoolGetAllModel.all(client, autoload=False)
 
         self.assertEqual(len(items), 3)
 
-        self.assertIsInstance(items[0], TestGetAllModel)
+        self.assertIsInstance(items[0], MyCoolGetAllModel)
         self.assertEqual(items[0].id, 1)
         self.assertEqual(items[0].Id, 1)
         self.assertIsNone(items[0].name)
         self.assertIsNone(items[0].Name)
 
-        self.assertIsInstance(items[1], TestGetAllModel)
+        self.assertIsInstance(items[1], MyCoolGetAllModel)
         self.assertEqual(items[1].id, 2)
         self.assertEqual(items[1].Id, 2)
         self.assertIsNone(items[1].name)
         self.assertIsNone(items[1].Name)
 
-        self.assertIsInstance(items[2], TestGetAllModel)
+        self.assertIsInstance(items[2], MyCoolGetAllModel)
         self.assertEqual(items[2].id, 3)
         self.assertEqual(items[2].Id, 3)
         self.assertIsNone(items[2].name)
         self.assertIsNone(items[2].Name)
 
     def test_get_by_id(self):
-        httpretty.enable()
+        self.adapter.register_uri('GET', 'mock://test-rest-getbyid/get-by-id/12345/',
+                                  json=make_response({
+                                        'Id': 12345,
+                                        'Name': 'Test Data',
+                                    }))
 
-        httpretty.register_uri(httpretty.GET,
-                               "http://test-rest-getbyid/get-by-id/12345/",
-                               content_type='application/json',
-                               body=json.dumps(make_response({
-                                   'Id': 12345,
-                                   'Name': 'Test Data',
-                               })))
+        client = StandardRestClient(url='mock://test-rest-getbyid', session=self.session)
 
-        client = StandardRestClient(url='http://test-rest-getbyid')
+        item = MyCoolGetByIdModel.get(client, 12345)
 
-        item = TestGetByIdModel.get(client, 12345)
-
-        httpretty.disable()
-
-        self.assertIsInstance(item, TestGetByIdModel)
+        self.assertIsInstance(item, MyCoolGetByIdModel)
         self.assertEqual(item.id, 12345)
         self.assertEqual(item.Id, 12345)
         self.assertEqual(item.name, 'Test Data')

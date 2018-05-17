@@ -34,9 +34,7 @@ class TestBrands(unittest.TestCase):
         self.client = client()
 
     def test_get_all_brands(self):
-        brands = self.client.brands(params={
-            'limit': 1
-        })
+        brands = list(self.client.brands())
 
         self.assertIsInstance(brands, list)
         self.assertTrue(len(brands) >= 3)

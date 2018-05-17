@@ -25,12 +25,9 @@
 """Models representing Web Page API objects"""
 
 from __future__ import absolute_import
-from ...embedded.stdlib.clients.rest.models import RestModel
+from ..common.models import Item
 
 
-class WebPage(RestModel):
+class WebPage(Item):
     """An object for retrieving data from and working with an individual page."""
     rest_root = '/web/pages/'
-
-    # def campaign(self):
-    # def trafficsource(self):

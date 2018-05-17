@@ -49,6 +49,6 @@ class WebClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return WebPage.all(self, **kwargs)
+            return WebPage.iall(self, **kwargs)
         else:
             return WebPage.get(self, id)

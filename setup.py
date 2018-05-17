@@ -38,6 +38,8 @@ setup(
         'click',
         'requests',
         'pyyaml',
+        'statsd',
+        'python-dateutil<2.7.0',
         'six',
     ],
     entry_points={

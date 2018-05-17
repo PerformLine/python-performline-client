@@ -24,7 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import absolute_import
-from .models import Brand, Campaign, Rule, TrafficSource
+from .models import Brand, Campaign, Rule, TrafficSource, Item
 
 
 class CommonClientMethods(object):
@@ -49,7 +49,7 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Brand.all(self, **kwargs)
+            return Brand.iall(self, **kwargs)
         else:
             return Brand.get(self, id)
 
@@ -73,7 +73,7 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            return Campaign.all(self, **kwargs)
+            return Campaign.iall(self, **kwargs)
         else:
             return Campaign.get(self, id)
 
@@ -96,7 +96,7 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Rule.all(self, **kwargs)
+            return Rule.iall(self, **kwargs)
         else:
             return Rule.get(self, id)
 
@@ -120,6 +120,29 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return TrafficSource.all(self, **kwargs)
+            return TrafficSource.iall(self, **kwargs)
         else:
             return TrafficSource.get(self, id)
+
+    def items(self, id=None, **kwargs):
+        """
+        Retrieve one or more scorable items associated with an account.
+
+        Args:
+            id (int, optional): If specified, retrieve a single item by
+                the given ID.  Otherwise, return all items.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.Item`
+            if ``id`` is not `None` representing the item with that ID.
+            Otherwise, retrieve a list of
+            :class:`~performline.products.common.models.Item` instances of all
+            items associated with the account.
+
+        Raises:
+            See :func:`~performline.client.Client.request`
+        """
+        if id is None:
+            return Item.iall(self, **kwargs)
+        else:
+            return Item.get(self, id)

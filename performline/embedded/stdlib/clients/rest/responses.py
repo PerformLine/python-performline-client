@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from six import string_types
 import math
 import json
 from ...utils.dicts import deep_get, must_deep_get
@@ -25,7 +26,7 @@ class Response(object):
     def payload(self):
         """
         Attempts to retrieve an arbitrary payload from the embedded response data.  If the embedded
-        data is a string, attemp to JSON decode it, but fallback to just returning the data as-is.
+        data is a string, attempt to JSON decode it, but fallback to just returning the data as-is.
 
         If the cached value exists and is not none, return it.
 
@@ -38,7 +39,7 @@ class Response(object):
         if hasattr(self, '_payload') and self._payload is not None:
             return self._payload
         elif hasattr(self, 'data'):
-            if isinstance(self.data, str):
+            if isinstance(self.data, (string_types, bytes)):
                 try:
                     self._payload = json.loads(self.data)
                 except ValueError:
@@ -128,6 +129,9 @@ class Response(object):
         """
         return deep_get(self.payload, path, fallback)
 
+    def get(self, key, fallback=None):
+        return self.deep_get(key, fallback)
+
 
 class SuccessResponse(Response):
     """
@@ -202,7 +206,7 @@ class SuccessResponse(Response):
         if self.offset == 0:
             return 1
         else:
-            return int(float(self.offset)/float(self.limit))+1
+            return int(float(self.offset) / float(self.limit)) + 1
 
     def results(self, index=None):
         """
@@ -211,7 +215,13 @@ class SuccessResponse(Response):
         Returns:
             list, dict (if ``index`` was specified)
         """
-        results = self.must_deep_get('Results')
+        results = self.deep_get('Results', [])
+
+        if results is None:
+            return []
+
+        if not isinstance(results, list):
+            results = [results]
 
         if index is not None:
             if index < len(results):

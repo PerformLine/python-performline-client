@@ -49,6 +49,6 @@ class ChatScoutClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Chat.all(self, **kwargs)
+            return Chat.iall(self, **kwargs)
         else:
             return Chat.get(self, id)

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from datetime import datetime
 from .responses import Response
+from ...utils.dicts import deep_get
 
 
 class TooManyIterations(Exception):
@@ -20,17 +21,33 @@ class ErrorResponse(Response, Exception):
     data = {}
 
     def __init__(self, response=None, data=None, exception=None, message=None):
-        if data is not None:
-            self.data = data
+        self.response = response
+        self.data = (data or {})
+        self.exception = exception
 
-        self.message = message or 'Unknown Error'
+        if message is not None:
+            self.message = message
+        else:
+            err_message = None
+            err_details = None
 
-        if response is not None:
-            self.response = response
-            self.message = self.deep_get('ErrorMessage')
-            self.traceback = self.deep_get('Traceback', [])
-        elif message is None and exception is not None:
-            self.message = exception.message
+            try:
+                err_message = deep_get(self.data, 'ErrorMessage', '')
+            except:
+                pass
+
+            try:
+                err_details = deep_get(self.data, 'ErrorDetails', '')
+            except:
+                pass
+
+            self.message = 'HTTP Request Error:\n' + "\n".join([
+                'Message:   {0}'.format(str(err_message)),
+                'Details:   {0}'.format(str(err_details)),
+                'Response:  {0}'.format(str(self.response)),
+                'Body:      {0}'.format(str(self.data)),
+                'Exception: {0}'.format(str(self.exception)),
+            ])
 
         super(Exception, self).__init__(self.message)
 

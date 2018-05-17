@@ -49,6 +49,6 @@ class CallCenterClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Call.all(self, **kwargs)
+            return Call.iall(self, **kwargs)
         else:
             return Call.get(self, id)

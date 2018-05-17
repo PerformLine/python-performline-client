@@ -1,7 +1,8 @@
 def autopage_fn(i, response, context):
     limit = context.params.get('limit')
+    offset = response.offset or 0
 
-    if (response.offset+1) < response.total_length:
+    if (offset + 1) < response.total_length:
         if limit is not None:
             if isinstance(context.params.get('offset'), int):
                 context.params['offset'] += limit

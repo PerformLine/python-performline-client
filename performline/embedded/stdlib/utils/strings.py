@@ -3,10 +3,11 @@ String formatting and manipulation functions.
 """
 from __future__ import absolute_import
 import re
+import six
 
 
 WORD_OMIT = r'[\W\s\_\-]+'
-WORD_SPLIT = re.compile(r'(?:([A-Z][^A-Z]*)|'+WORD_OMIT+')')
+WORD_SPLIT = re.compile(r'(?:([A-Z][^A-Z]*)|' + WORD_OMIT + ')')
 CAMEL_STRIP = re.compile(WORD_OMIT)
 
 
@@ -67,3 +68,32 @@ def underscore(value, joiner='_'):
 
     # lowercase each word and join
     return joiner.join(x.strip().lower() for x in value)
+
+
+def autotype(value):
+    if isinstance(value, basestring):
+        if value.lower() == 'true':
+            return True
+        elif value.lower() == 'false':
+            return False
+        elif value.lower() == 'null':
+            return None
+        else:
+            try:
+                return int(value)
+            except ValueError:
+                pass
+
+            try:
+                return float(value)
+            except ValueError:
+                pass
+
+    return value
+
+
+def u(value):
+    try:
+        return six.u(value)
+    except TypeError:
+        return value

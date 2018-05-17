@@ -1,24 +1,27 @@
+"""
+An opinionated HTTP client for consuming PerformLine internal APIs.
+"""
 from __future__ import absolute_import
+from six import string_types
 import logging
 import requests
+import requests_mock
 import requests.exceptions
 import time
+import re
 from datetime import datetime
-import json
 import yaml
+import uuid
 from .responses import SuccessResponse
-from .exceptions import ErrorResponse, \
-                        AuthenticationFailed, \
-                        NotFound, \
-                        ServiceUnavailable, \
-                        DeprecatedEndpoint, \
-                        BadGateway, \
-                        TooManyIterations
+from .exceptions import ErrorResponse, AuthenticationFailed, NotFound, ServiceUnavailable, \
+    DeprecatedEndpoint, BadGateway, TooManyIterations
 from .utils import autopage_fn
+from ...utils.json import jsonify
+from ...utils import stats
 
 
 ALLOWED_METHODS = ['get', 'post', 'put', 'delete', 'options', 'head']
-RX_TRIM_SLASH = r'(?:^/*|/*$)'
+RX_TRIM_SLASH = re.compile('(?:^/*|/*$)')
 
 
 class RequestContext(object):
@@ -63,16 +66,23 @@ class StandardRestClient(object):
     content_type = 'application/json'
     headers = {}
     params = {}
+    implemented_by = None
     request_options = {}
+    session = None
+    models = dict()
 
-    def __init__(self,
-                 url=None,
-                 prefix=None,
-                 loglevel='WARNING',
-                 content_type=None,
-                 params=None,
-                 headers=None,
-                 request_options={}):
+    def __init__(
+        self,
+        url=None,
+        prefix=None,
+        loglevel='WARNING',
+        content_type=None,
+        params=None,
+        headers=None,
+        implemented_by=None,
+        session=None,
+        request_options={}
+    ):
         # check and set the various kwargs
         for p in [
             'url',
@@ -80,6 +90,8 @@ class StandardRestClient(object):
             'content_type',
             'params',
             'headers',
+            'implemented_by',
+            'session',
             'request_options',
         ]:
             value = locals().get(p)
@@ -99,11 +111,24 @@ class StandardRestClient(object):
 
         logging.basicConfig(level=self.loglevel)
 
+        # setup empty mock flagset
+        self._mock_flags = {}
+
         # disables the warnings requests emits, which ARE for our own good, but if we make the
         # decision to do something stupid, we'll own that and don't need to pollute the logs.
         requests.packages.urllib3.disable_warnings()
 
-    def request(self, method, path, data=None, params={}, headers={}, encoder='json', **kwargs):
+    def request(
+        self,
+        method,
+        path,
+        data=None,
+        params={},
+        headers={},
+        encoder='json',
+        content_type=None,
+        **kwargs
+    ):
         """
         Perform a generic HTTP request against this instance's configured host.
 
@@ -151,15 +176,26 @@ class StandardRestClient(object):
         if self.content_type is not None:
             headers['Content-Type'] = self.content_type
 
+        if content_type is not None:
+            headers['Content-Type'] = content_type
+
         # merge in default headers and params
         params.update(self.params)
         headers.update(self.headers)
 
+        for k, v in params.items():
+            if v is True:
+                params[k] = 'true'
+            elif v is False:
+                params[k] = 'false'
+            else:
+                params[k] = v
+
         # handle data encoding (if there is data to encode and we were asked to)
-        if data is not None and encoder is not None:
+        if data is not None and encoder:
             try:
-                encodeFn = getattr(self, 'encode_%s' % encoder)
-                data = encodeFn(data, {
+                encode_fn = getattr(self, 'encode_%s' % encoder)
+                data = encode_fn(data, {
                     'method': method,
                     'path': path,
                     'params': params,
@@ -173,22 +209,45 @@ class StandardRestClient(object):
         if isinstance(self.request_options, dict):
             kwargs.update(self.request_options)
 
+        domain = self.url.strip('/')
+        domain = domain.replace('http://', '')
+        domain = domain.replace('https://', '')
+
+        stat_tags = {
+            'method': method.lower(),
+            'domain': domain,
+        }
+
+        if self.implemented_by is not None:
+            stat_tags['implemented_by'] = str(self.implemented_by)
+
         # perform the request
         try:
-            response = getattr(requests, method.lower())(
-                '{0}/{1}{2}/'.format(
-                    self.url.strip('/'),
-                    self.prefix.lstrip('/'),
-                    path),
-                data=data,
-                params=params,
-                headers=headers,
-                **kwargs)
+            stats.increment('performline.clients.rest.request', tags=stat_tags)
+
+            with stats.time('performline.clients.rest.request.time', tags=stat_tags):
+                requestor = (self.session or requests)
+
+                response = getattr(requestor, method.lower())(
+                    self.make_url(path),
+                    data=data,
+                    params=params,
+                    headers=headers,
+                    **kwargs
+                )
+
         except requests.exceptions.SSLError:
+            stats.increment('performline.clients.rest.error_ssl', tags=stat_tags)
             raise
         except requests.exceptions.ConnectionError as e:
-            raise BadGateway(message="Failed to connect to '{0}'"
-                             .format(e.request.url), exception=e)
+            stats.increment('performline.clients.rest.error_on_connect', tags=stat_tags)
+            raise BadGateway(
+                message="Failed to connect to {}: {}".format(
+                    e.request.url,
+                    str(e)
+                ),
+                exception=e
+            )
 
         # check for endpoint deprecation, and raise an error if the endpoint cutoff date is
         # in the past.
@@ -203,9 +262,24 @@ class StandardRestClient(object):
             if e.is_after_cutoff():
                 raise
 
+        stat_tags.update({
+            'status': response.status_code,
+        })
+
         if response.status_code < 400:
-            return SuccessResponse(response, response.json())
+            stats.increment('performline.clients.rest.success', tags=stat_tags)
+            response_body = None
+
+            if len(response.content) > 0:
+                try:
+                    response_body = response.json()
+                except ValueError:
+                    pass
+
+            return SuccessResponse(response, response_body)
         else:
+            stats.increment('performline.clients.rest.error', tags=stat_tags)
+
             try:
                 body = response.json()
             except ValueError:
@@ -260,8 +334,19 @@ class StandardRestClient(object):
         """
         return self.request('head', *args, **kwargs)
 
-    def request_until(self, method, path, data=None, params={}, headers={}, encoder='json',
-                      testfn=autopage_fn, request_delay_ms=0, max_iterations=25, **kwargs):
+    def request_until(
+        self,
+        method,
+        path,
+        data=None,
+        params={},
+        headers={},
+        encoder='json',
+        testfn=autopage_fn,
+        request_delay_ms=0,
+        max_iterations=25,
+        **kwargs
+    ):
         """
         Perform an HTTP request repeatedly until a given function returns true.
 
@@ -270,12 +355,13 @@ class StandardRestClient(object):
 
             testfn (func/lambda): A function that will be called with the signature
                 ``fn(i, response, context)``; where:
+
                 - ``i`` is the current iteration number (starting from 0)
                 - ``response`` is the response for the HTTP request.
                 - ``context`` (:class:`RequestContext`) is an editable request context that can
                     be used for modifying the request details for subsequent calls.
 
-                The function should return a truthy value when request processing should stop.
+                The function should return a truthy value when request processing should stop.z
 
             request_delay_ms (int): The number of milliseconds to wait between successive requests
                 if ``testfn`` has not evaluated to True.
@@ -289,21 +375,28 @@ class StandardRestClient(object):
         context = RequestContext(self, method, path, data, params, headers)
 
         while True:
-            response = self.request(context.method,
-                                    context.path,
-                                    context.data,
-                                    context.params,
-                                    context.headers, encoder, **kwargs)
+            response = self.request(
+                context.method,
+                context.path,
+                context.data,
+                context.params,
+                context.headers,
+                encoder,
+                **kwargs
+            )
 
             responses.append(response)
 
             # break if we've exceeded max_iterations
             if max_iterations is not None:
                 if count >= max_iterations:
-                    raise TooManyIterations(("Request {0} {1} has exceeded the maximum iteration "
-                                             "count of {2}").format(method.upper(),
-                                                                    path,
-                                                                    max_iterations))
+                    raise TooManyIterations(
+                        "Request {} {} has exceeded the maximum iteration count of {}".format(
+                            method.upper(),
+                            path,
+                            max_iterations
+                        )
+                    )
 
             # only loop if we were given a callable testfn
             if callable(testfn):
@@ -357,6 +450,13 @@ class StandardRestClient(object):
         """
         return self.request_until('head', *args, **kwargs)
 
+    def make_url(self, path):
+        return '{0}/{1}{2}/'.format(
+            self.url.strip('/'),
+            self.prefix.lstrip('/'),
+            path.strip('/')
+        )
+
     def encode_json(self, data, opts):
         """
         Returns the given data encoded as JSON
@@ -368,7 +468,7 @@ class StandardRestClient(object):
         Returns:
             str
         """
-        return json.dumps(data, indent=4)
+        return jsonify(data)
 
     def encode_yaml(self, data, opts):
         """
@@ -382,6 +482,88 @@ class StandardRestClient(object):
             str
         """
         return yaml.safe_dump(data, default_flow_style=False)
+
+    def mock_init(self, hostname=None, flags=None):
+        """
+        Initializes request mocking for this instance (used for testing).
+
+        Args:
+            hostname (str): Specify a specific hostname to use.
+        """
+
+        if isinstance(hostname, string_types):
+            self.url = 'mock://{0}'.format(hostname)
+        else:
+            self.url = 'mock://{0}'.format(str(uuid.uuid4()))
+
+        self.session = requests.Session()
+        self._adapter = requests_mock.Adapter()
+        self.session.mount('mock', self._adapter)
+
+        if isinstance(flags, dict):
+            self._mock_flags = flags
+
+        return self.session
+
+    def mock_request(self, method, path, responses, **kwargs):
+        """
+        Register a specific HTTP method, path, and response for this instance to respond with.
+
+        Args:
+            method (str): The HTTP method to register.
+
+            path (str, re, func): The path (relative to this instances ``prefix``) to create a
+                mock response for.  If ``path`` is a `re` regular expression, that will be used for
+                matching requests directly.
+
+                If ``path`` is a function of signature ``fn(request)``, it will be called and used
+                to determine if this route should handle the request.
+
+                See also:
+                    http://requests-mock.readthedocs.io/en/latest/matching.html#custom-matching
+
+            responses (list): A list of zero or more JSON Response payloads to include.  Responses
+                will be issued in the order they are presented here; e.g.: subsequent calls to the
+                same route will return the next response in the list until the list is empty.
+
+            kwargs: Will be passed through to the underlying
+                :func:`requests_mock.Adapter.request_uri` function.
+        """
+
+        if not isinstance(responses, list):
+            raise AttributeError("Mock responses must be a list")
+
+        responses = [{
+            'json': r,
+        } for r in responses]
+
+        if isinstance(path, string_types):
+            url = self.make_url(path)
+        else:
+            url = path
+
+        logging.debug('Registering mock URL {0} {1}'.format(method, url))
+        self._adapter.register_uri(method.upper(), url, responses, **kwargs)
+
+    def mock_flag(self, key, fallback=False):
+        """
+        Returns the value of a flag used for mocking this service, or a fallback value if the key
+        was not found.
+
+        Args:
+            key (str): The name of the flag to retrieve.
+
+            fallback (any): The value to return if the given key is set.
+
+        Returns:
+            any
+        """
+        return self._mock_flags.get(key, fallback)
+
+    def model(self, name):
+        if name in self.models:
+            return self.models[name]
+        raise Exception('No such model "{}"'.format(name))
 
 
 def _check_response_for_deprecation(path, response):
@@ -402,14 +584,14 @@ def _check_response_for_deprecation(path, response):
     """
 
     if response.headers.get('X-PerformLine-Deprecated') == '1':
-        _notAfter = response.headers.get('X-PerformLine-Deprecated-After')
-        notAfter = None
-        afterMsg = ''
+        _not_after = response.headers.get('X-PerformLine-Deprecated-After')
+        not_after = None
+        after_msg = ''
 
-        if _notAfter is not None:
-            notAfter = datetime.strptime(_notAfter, '%Y-%m-%dT%H:%M:%S.%f')
-            afterMsg = ' It will stop working after {0}. '.format(notAfter)
+        if _not_after is not None:
+            not_after = datetime.strptime(_not_after, '%Y-%m-%dT%H:%M:%S.%f')
+            after_msg = ' It will stop working after {0}. '.format(not_after)
 
         raise DeprecatedEndpoint('The API endpoint "{0}" has been marked deprecated.{1}'
-                                 .format(path, afterMsg),
-                                 cutoff=notAfter)
+                                 .format(path, after_msg),
+                                 cutoff=not_after)

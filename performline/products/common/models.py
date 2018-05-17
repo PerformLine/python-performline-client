@@ -26,13 +26,19 @@
 
 from __future__ import absolute_import
 from ...embedded.stdlib.clients.rest.models import RestModel
+from ...embedded.stdlib.utils.dicts import compact
 
 
 class Brand(RestModel):
     """An object for retrieving data from and working with an individual brand."""
     rest_root = '/common/brands/'
 
-    # def campaigns(self):
+    def campaigns(self, limit=None, offset=None):
+        return Campaign.iall(self.client, params=compact({
+            'brand': self.id,
+            'limit': limit,
+            'offset': offset,
+        }))
 
 
 class Campaign(RestModel):
@@ -43,7 +49,14 @@ class Campaign(RestModel):
     def brand(self):
         return Brand.get(self.client, self.brand_id)
 
-    # def pages(self):
+    def items(self, limit=None, offset=None, brand=None):
+        return Item.iall(self.client, params=compact({
+            'campaign': self.id,
+            'brand': brand,
+            'limit': limit,
+            'offset': offset,
+        }))
+
     # def rules(self):
 
 
@@ -59,3 +72,21 @@ class Rule(RestModel):
 class TrafficSource(RestModel):
     """An object for retrieving data from and working with an individual traffic source."""
     rest_root = '/common/trafficsources/'
+
+
+class Item(RestModel):
+    """An object for retrieving data from and working with scorable content,
+    regardless of product."""
+    rest_root = '/common/items/'
+
+    @property
+    def brand(self):
+        return Brand.get(self.client, self.brand_id)
+
+    @property
+    def campaign(self):
+        return Campaign.get(self.client, self.campaign_id)
+
+    @property
+    def traffic_source(self):
+        return TrafficSource.get(self.client, self.traffic_source_id)
