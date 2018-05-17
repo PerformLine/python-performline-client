@@ -41,6 +41,7 @@ setup(
         'statsd',
         'python-dateutil<2.7.0',
         'six',
+        'requests_mock',
     ],
     entry_points={
         'console_scripts': [

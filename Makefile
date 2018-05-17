@@ -56,7 +56,7 @@ docs-build: docs-clean
 
 docs: deps docs-build
 
-package-build: clean
+package-build:
 	./env/bin/python setup.py sdist bdist_wheel
 
 package-sign:
@@ -74,7 +74,7 @@ package-push:
 package-push-test:
 	./env/bin/twine upload --config-file $(or $$PYPIRC,$$PYPIRC,~/.pypirc) --skip-existing -r pypitest dist/*
 
-package: deps library-prefix test package-build package-sign package-push clean-cache
+package: package-build package-sign package-push
 
 package-test: deps library-prefix test package-build package-sign package-push-test clean-cache
 
