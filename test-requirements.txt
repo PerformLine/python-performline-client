@@ -5,3 +5,4 @@ tox
 tox-travis
 twine
 statsdmock
+requests_mock

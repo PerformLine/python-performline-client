@@ -3,7 +3,7 @@
 all: env deps performline/embedded/stdlib library-prefix test
 
 env:
-	virtualenv --distribute env
+	virtualenv env
 
 deps:
 	./env/bin/pip install -q -I -r requirements.txt
@@ -56,7 +56,7 @@ docs-build: docs-clean
 
 docs: deps docs-build
 
-package-build: clean-build
+package-build: clean
 	./env/bin/python setup.py sdist bdist_wheel
 
 package-sign:
