@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 import json
+import os
 from ...utils.dicts import deep_get, camelize, camelize_dict, underscore_dict
 from ...utils.dicts import compact as utils_compact
+from ...utils.strings import u
 from .exceptions import UnsupportedOperation
 
 
@@ -35,11 +37,21 @@ class RestModel(object):
     """
 
     primary_key = 'id'
+    secondary_key = None
     rest_read_method = 'get'
     rest_create_method = 'post'
     rest_update_method = 'put'
+    fields = tuple()
 
-    def __init__(self, client, data=None, metadata={}, rest_root=None, primary_key=None):
+    def __init__(
+        self,
+        client,
+        data=None,
+        metadata={},
+        rest_root=None,
+        primary_key=None,
+        secondary_key=None
+    ):
         """
         Provides a simplified interface for working with standard REST API responses.
 
@@ -62,6 +74,9 @@ class RestModel(object):
         if primary_key is not None:
             self.primary_key = primary_key
 
+        if secondary_key is not None:
+            self.secondary_key = secondary_key
+
         if not hasattr(self, 'rest_root') or self.rest_root is None:
             raise AttributeError("Cannot create RestModel instance without a "
                                  "valid 'rest_root' attribute")
@@ -78,15 +93,52 @@ class RestModel(object):
 
     @classmethod
     def get(cls, client, pk):
-        return cls(client, {
-            cls.primary_key: pk,
-        }).retrieve()
+        """
+        Retrieve a single instance of this model by its primary key.
+
+        Args:
+            client (:class:`StandardRestClient`): The client instance that will be used to perform
+                the underlying request.
+
+            pk (any): A unique value that unambiguously represents the specific instance being
+                sought.
+
+        Returns:
+            :class:`RestModel`
+        """
+        if cls.secondary_key is not None:
+            if not isinstance(pk, (list, tuple)) or len(pk) == 1:
+                raise AttributeError(
+                    "Multiple components are required to retrieve this item, 1 given."
+                )
+
+            return cls(client, {
+                cls.primary_key: pk[0],
+                cls.secondary_key: pk[1],
+            }).retrieve()
+        else:
+            return cls(client, {
+                cls.primary_key: pk,
+            }).retrieve()
 
     @classmethod
-    def all(cls, client, autoload=True, **kwargs):
-        items = []
+    def iall(cls, client, autoload=False, **kwargs):
+        """
+        Iterator to retrieve all instances of this model, automatically paging through paginated
+        result sets and aggregating the instances into a single list.
 
+        Args:
+            client (:class:`StandardRestClient`): The client instance that will be used to perform
+                the underlying request.
+
+            autoload (bool): Whether each retrieved instance should automatically be reloaded from
+                the server to fully populate its data.
+        """
         for response in client.get_until(cls.rest_root, **kwargs):
+            if os.environ.get('DEBUG') in ['1', 'true']:
+                import json
+                print('[DEBUG] {}'.format(json.dumps(response.payload, indent=4)))
+
             # for each result
             for item in response.results():
                 # format the list result item the same way formatted_path would
@@ -96,20 +148,61 @@ class RestModel(object):
                 pk = item.get(cls.primary_key)
 
                 if pk is not None:
-                    instance = cls(client, {
-                        cls.primary_key: pk,
-                    })
+                    if cls.secondary_key is not None:
+                        sk = item.get(cls.secondary_key)
+
+                        if sk is None:
+                            continue
+
+                        item[cls.secondary_key] = sk
+
+                    instance = cls(client, item)
 
                     if autoload:
                         instance.retrieve()
 
-                    items.append(instance)
+                    yield instance
 
-        return items
+    @classmethod
+    def all(cls, client, autoload=True, **kwargs):
+        """
+        Retrieve all instances of this model, automatically paging through paginated result sets
+        and aggregating the instances into a single list.
+
+        Args:
+            client (:class:`StandardRestClient`): The client instance that will be used to perform
+                the underlying request.
+
+            autoload (bool): Whether each retrieved instance should automatically be reloaded from
+                the server to fully populate its data.
+
+        Returns:
+            list
+        """
+        return list(cls.iall(client, autoload=autoload, **kwargs))
 
     @property
     def pk(self):
+        """
+        Retrieve the current value of this model's primary key field.
+
+        Returns:
+            any
+        """
         return self._data.get(self.primary_key)
+
+    @property
+    def sk(self):
+        """
+        Retrieve the current value of this model's secondary key field.
+
+        Returns:
+            any
+        """
+        if self.secondary_key is None:
+            return None
+
+        return self._data.get(self.secondary_key)
 
     @property
     def _data(self):
@@ -125,11 +218,29 @@ class RestModel(object):
 
     @property
     def _metadata(self):
+        """
+        Retrieves any metadata associated with the model as returned from the server when
+        performing a :func:`retrieve` call.
+
+        Returns:
+            dict
+        """
         return self.__metadata
 
     @property
     def instance_path(self):
-        return self.rest_root.rstrip('/') + '/{' + self.primary_key.strip('/') + '}/'
+        """
+        Retrieve the canonical URL path pattern representing a single instance of this model
+        (``rest_root`` combined with ``primary_key``).  This is a pattern that will be processed
+        with :func:`format` to form the final path at call time.
+
+        Returns:
+            str
+        """
+        if self.secondary_key is not None:
+            return '{rest_root}/{primary_key}/{secondary_key}/'
+
+        return '{rest_root}/{primary_key}/'
 
     def formatted_path(self, additional_args={}):
         """
@@ -140,13 +251,23 @@ class RestModel(object):
             str
         """
 
-        kwa = {}
+        kwa = {
+            'rest_root': self.rest_root.rstrip('/'),
+        }
 
-        for k, v in underscore_dict(self._data).items():
+        format_data = underscore_dict(self._data)
+
+        for k, v in format_data.items():
             kwa[k] = getattr(self, k)
 
         kwa.update(additional_args)
-        return self.instance_path.format(**kwa)
+
+        kwa['primary_key'] = kwa.get(self.primary_key)
+
+        if self.secondary_key is not None:
+            kwa['secondary_key'] = kwa.get(self.secondary_key)
+
+        return self.instance_path.format(**utils_compact(kwa))
 
     def set_data(self, data):
         """
@@ -227,7 +348,7 @@ class RestModel(object):
 
         return self
 
-    def save(self, refresh=True, compact=False):
+    def save(self, refresh=True, compact=False, update=False):
         """
         Persists this model's current data to the server.
 
@@ -246,8 +367,9 @@ class RestModel(object):
         """
 
         if self.rest_create_method is None and self.rest_update_method is None:
-            raise UnsupportedOperation("Persistence is not supported on {0}"
-                                       .format(self.__class__))
+            raise UnsupportedOperation(
+                "Persistence is not supported on {0}".format(self.__class__)
+            )
 
         data = self._data
 
@@ -260,16 +382,32 @@ class RestModel(object):
 
         data = self.prepare_data_for_update(data)
 
+        if update is True:
+            method = self.rest_update_method
+        else:
+            method = self.rest_create_method
+
         # performs the request
-        self.client.request(self.rest_update_method,
-                            self.formatted_path(),
-                            data)
+        self.client.request(
+            method,
+            self.formatted_path(),
+            data
+        )
 
         # optionally refresh (read back) the data we just saved
         if refresh:
             return self.retrieve()
 
         return True
+
+    def update(self, **kwargs):
+        """
+        Updates this model's current data on the server.
+
+        See: save()
+        """
+        kwargs['update'] = True
+        return self.save(**kwargs)
 
     def __getattr__(self, name):
         """
@@ -288,11 +426,12 @@ class RestModel(object):
                 return value
 
     def __setattr__(self, name, value):
-        key = camelize(name, True)
+        key = u(camelize(name, True))
 
-        if isinstance(self._data, dict) and key in self._data:
-            print('Setting %s' % key)
-            self._data[key] = value
+        if isinstance(self._data, dict):
+            if key in [u(camelize(k, True)) for k in self._data.keys()] \
+                    or key in [u(camelize(k, True)) for k in self.fields]:
+                    self._data[key] = value
 
         object.__setattr__(self, name, value)
 

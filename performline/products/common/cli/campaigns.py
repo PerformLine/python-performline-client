@@ -39,8 +39,7 @@ def list(state):
 
 
 @campaigns.command(help='Show details about a campaign')
-@click.argument('id',
-                type=int)
+@click.argument('id', type=int)
 @click.pass_obj
 def show(state, id):
     out(state, state.client.campaigns(id))

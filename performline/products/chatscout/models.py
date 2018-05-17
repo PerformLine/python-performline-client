@@ -25,12 +25,13 @@
 """Models representing ChatScout API objects"""
 
 from __future__ import absolute_import
-from ...embedded.stdlib.clients.rest.models import RestModel
+from ..common.models import Item
 
 
-class Chat(RestModel):
+class Chat(Item):
     """An object for retrieving data from and working with an individual chat."""
     rest_root = '/chatscout/chats/'
 
-    # def campaign(self):
-    # def trafficsource(self):
+    @property
+    def url(self):
+        return None

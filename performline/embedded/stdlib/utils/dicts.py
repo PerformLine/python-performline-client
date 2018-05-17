@@ -2,6 +2,7 @@
 Functions for retrieving data from and manipulating dictionaries.
 """
 from __future__ import absolute_import
+from copy import deepcopy
 from .strings import camelize, underscore
 
 DATA_ELEMENT_SEPARATOR = '/'
@@ -196,3 +197,31 @@ def compact(inDict, keep_if=lambda k, v: v is not None):
         }
 
     raise ValueError("Expected: dict, got: {0}".format(type(inDict)))
+
+
+def merge(inDict, newDict):
+    """
+    Takes an input dictionary and updates a deep copy of it with the values from another
+    dictionary, then returns the copy.
+
+    Args:
+        inDict (dict): The dictionary to copy.
+
+        newDict (dict): The dictionary to merge into the copy.
+
+    Returns:
+        dict
+    """
+
+    d = deepcopy(inDict)
+    d.update(newDict)
+    return d
+
+
+class dotdict(dict):
+    """
+    Provides dot.notation access to dictionary attributes
+    """
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__

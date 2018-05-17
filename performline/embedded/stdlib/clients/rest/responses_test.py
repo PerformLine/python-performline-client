@@ -67,3 +67,4 @@ class RestResponseTest(TestCase):
         self.assertEqual(response.offset, 4)
         self.assertEqual(response.total_pages, 13)
         self.assertEqual(response.current_page, 3)
+        self.assertIsInstance(response.results(), list)

@@ -25,12 +25,13 @@
 """Models representing Call Center API objects"""
 
 from __future__ import absolute_import
-from ...embedded.stdlib.clients.rest.models import RestModel
+from ..common.models import Item
 
 
-class Call(RestModel):
+class Call(Item):
     """An object for retrieving data from and working with an individual call."""
     rest_root = '/callcenter/calls/'
 
-    # def campaign(self):
-    # def trafficsource(self):
+    @property
+    def url(self):
+        return None

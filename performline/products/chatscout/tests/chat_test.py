@@ -33,5 +33,4 @@ class TestChats(unittest.TestCase):
         self.client = client()
 
     def test_get_all_chats(self):
-        chats = self.client.chats()
-        self.assertIsInstance(chats, list)
+        self.client.chats()

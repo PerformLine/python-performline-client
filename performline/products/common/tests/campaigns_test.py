@@ -34,7 +34,7 @@ class TestCampaigns(unittest.TestCase):
         self.client = client()
 
     def test_get_all_campaigns(self):
-        campaigns = self.client.campaigns()
+        campaigns = list(self.client.campaigns())
 
         self.assertIsInstance(campaigns, list)
         self.assertTrue(len(campaigns) >= 3)

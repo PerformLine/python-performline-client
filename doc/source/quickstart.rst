@@ -28,22 +28,18 @@ Basic Usage: Printing all Brands and Campaigns
    :linenos:
 
    from performline.client import Client
+   import json
 
-   c = Client("YOUR-API-KEY")
+   client = Client("YOUR_API_KEY")
 
-   # list the name and id of all brands
-   for brand in c.brands():
-       print("Brand: %s (id = %d)" % (brand.name, brand.id))
+   # list all brands
+   for brand in client.brands():
+      print("Brand: {} (id: {})".format(brand.name, brand.id))
 
-   # list details about all campaigns
-   for item in c.campaigns():
-       # retrieve complete details on this campaign
-       campaign = c.campaigns(item.id)
+      # list all campaigns in the current brand
+      for campaign in brand.campaigns():
+         print("    Campaign: {}".format(campaign.name))
 
-       # load the brand associated with this campaign
-       brand = campaign.brand
-
-       print("Campaign: %s" % campaign.name)
-       print("  For Brand: %s (id = %d)" % (brand.name, brand.id))
-       print("  Pages:     %d" % campaign.num_pages)
-       print("  Score:     %s" % campaign.compliance_score)
+         # output the full content of each item in the current campaign
+         for item in campaign.items():
+            print(json.dumps(item._data, indent=4))

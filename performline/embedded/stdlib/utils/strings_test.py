@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from unittest import TestCase
-from .strings import camelize, underscore
+from .strings import camelize, underscore, u
 
 
 class UtilsStringTest(TestCase):
@@ -41,3 +41,10 @@ class UtilsStringTest(TestCase):
         self.assertEqual(underscore('TestValue', joiner='-'),        'test-value')
         self.assertEqual(underscore('testValue', joiner='-'),        'test-value')
         self.assertEqual(underscore('TeSt VaLue', joiner='-'),       'te-st-va-lue')
+
+    def test_boy_am_i_tired_of_python23_compat_unicode_being_so_freakin_broken(self):
+        """
+        Test if the u() function solves EVERY UNICODE PROBLEM EVER
+        """
+        self.assertEqual(u('test'), u'test')
+        self.assertEqual(u(str('test')), u'test')

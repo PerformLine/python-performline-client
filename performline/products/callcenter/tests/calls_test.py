@@ -33,5 +33,4 @@ class TestCalls(unittest.TestCase):
         self.client = client()
 
     def test_get_all_calls(self):
-        calls = self.client.calls()
-        self.assertIsInstance(calls, list)
+        self.client.calls()
