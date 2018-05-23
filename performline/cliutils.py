@@ -28,9 +28,15 @@ import click
 import sys
 import json
 import yaml
+from inspect import isgeneratorfunction, isgenerator
 
 
 def normalize(data):
+    if isgeneratorfunction(data):
+        data = list(data())
+    elif isgenerator(data):
+        data = list(data)
+
     if hasattr(data, '__dict__'):
         data = data.__dict__()
     elif isinstance(data, list):
