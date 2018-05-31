@@ -3,12 +3,13 @@
 all: env deps performline/embedded/stdlib library-prefix test
 
 env:
+	which virtualenv || pip install virtualenv
 	virtualenv env
 
 deps:
-	./env/bin/pip install -q -I -r requirements.txt
-	./env/bin/pip install -q -I -r test-requirements.txt
-	./env/bin/pip install -q -I -r doc-requirements.txt
+	./env/bin/pip install -I -r requirements.txt
+	./env/bin/pip install -I -r test-requirements.txt
+	./env/bin/pip install -I -r doc-requirements.txt
 
 performline/embedded/stdlib:
 	-mkdir -p performline/embedded/stdlib
@@ -29,7 +30,7 @@ performline/embedded/stdlib:
 		--filter='H *' \
 		../python-performline-stdlib/performline/ ./performline/embedded/stdlib/
 
-test:
+test: clean-cache
 	test "${TRAVIS_PYTHON_VERSION}" == "2.6" || ./env/bin/flake8
 	./env/bin/py.test -v -o norecursedirs='.cache .eggs .git env .tox'
 
