@@ -20,6 +20,7 @@ performline/embedded/stdlib:
 		--delete-after \
 		--filter='H *.pyc' \
 		--filter='H __pycache__/' \
+		--filter='H *_test.py' \
 		--filter='+ /__init__.py' \
 		--filter='+ /utils/' \
 		--filter='+ /utils/*.py' \
