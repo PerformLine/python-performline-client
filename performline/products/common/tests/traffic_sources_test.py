@@ -1,3 +1,4 @@
+
 # Copyright (c) 2016, PerformLine, Inc.
 # All rights reserved.
 #
@@ -25,54 +26,54 @@
 
 from __future__ import unicode_literals
 import unittest
-from ..models import Campaign
+from ..models import TrafficSource
 from ....testing import client
 
-class TestCampaigns(unittest.TestCase):
+class TestTrafficSources(unittest.TestCase):
     def setUp(self):
         self.client = client()
 
-    def test_get_campaign(self):
-        c = list(self.client.campaigns())
+    def test_get_traffic_source(self):
+        ts = list(self.client.trafficsources())
 
-        first_c = self.client.campaigns(1)
+        first_ts = self.client.trafficsources(1)
 
-        self.assertIsInstance(first_c, Campaign)
+        self.assertIsInstance(first_ts, TrafficSource)
 
-        #Testing that the appropriate number of campaigns are returned
-        self.assertEqual(len(c), 3)
+        # Testing that the appropriate number of traffic sources should be returned
+        self.assertEqual(len(ts), 5)
 
-        #Test attributes of first campaign against known campaign fixtures
-        self.assertEqual(c[1].Id, 1)
-        self.assertEqual(c[1].fields['name'], "A. Foo: Content")
-        self.assertEqual(c[1].fields['advertiser_id'], 11)
+        # Test attributes of first traffic source against known traffic source fixtures
+        self.assertEqual(ts[1].Id, 1)
+        self.assertEqual(ts[1].fields['tag'], "906204150d942175ca729ecca2d646ea3389d359")
+        self.assertEqual(ts[1].fields['Agency'], [10])
 
-    def test_campaign_endpoint_access(self):
-        # Campaign 4 belongs to an agency which test client does not have access to
-        # c should be empty list which should automatically create error
+    def test_traffic_source_end_point_access(self):
+        # Traffic source 6 belongs to agency test client does not have access to
+        # ts should be empty list which should automatically create error
         try:
-            c = list(self.client.campaigns(4))
+            ts = list(self.client.trafficsources(6))
         except AttributeError:
             self.assertEqual(1, 1)
 
-        if len(c) != 0:
-            raise AssertionError('A campaign outside the scope of the test token was returned.')
+        if len(ts) != 0:
+            raise AssertionError('A traffic source outside the scope of the test token was returned.')
 
-    def test_campaign_endpoint_offset(self):
-        c = list(self.client.campaigns(offset=1))
+    def test_traffic_source_endpoint_offset(self):
+        ts = list(self.client.trafficsources(offset=1))
 
-        self.assertEqual(len(c), 2)
+        self.assertEqual(len(ts), 4)
        
-        c_names = [campaign['pk'] for campaign in c]
+        ts_names = [traffic_source['pk'] for traffic_source in ts]
 
-        self.assertEqual(c_names, [2, 3])
+        self.assertEqual(ts_names, [2, 3, 4, 5])
 
-    def test_campaign_endpoint_limit(self):
-        c = list(self.client.campaigns(limit=2))
+    def test_traffic_source_endpoint_limit(self):
+        ts = list(self.client.trafficsources(limit=3))
 
-        self.assertEqual(len(c), 2)
+        self.assertEqual(len(ts), 3)
 
-        c_keys = [campaign['pk'] for campaign in c]
+        ts_keys = [traffic_source['pk'] for traffic_source in ts]
 
-        self.assertEqual(c_keys, [1, 2])
+        self.assertEqual(ts_keys, [1, 2, 3])
 
