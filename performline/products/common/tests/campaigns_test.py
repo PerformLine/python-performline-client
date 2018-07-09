@@ -28,36 +28,51 @@ import unittest
 from ..models import Campaign
 from ....testing import client
 
-
 class TestCampaigns(unittest.TestCase):
     def setUp(self):
         self.client = client()
 
-    def test_get_all_campaigns(self):
-        campaigns = list(self.client.campaigns())
+    def test_get_campaign(self):
+        c = list(self.client.campaigns())
 
-        self.assertIsInstance(campaigns, list)
-        self.assertTrue(len(campaigns) >= 3)
+        first_c = self.client.campaigns(1)
 
-        self.assertEqual(campaigns[0].id, 1)
-        self.assertEqual(campaigns[0].name, 'A. Foo: Content')
+        self.assertIsInstance(first_c, Campaign)
 
-        self.assertEqual(campaigns[1].id, 2)
-        self.assertEqual(campaigns[1].name, 'A. Foo: Disclosure Page')
+        #Testing that the appropriate number of campaigns are returned
+        self.assertEqual(len(c), 3)
 
-        self.assertEqual(campaigns[2].id, 3)
-        self.assertEqual(campaigns[2].name, 'BAR, Inc.: Content')
+        #Test attributes of first campaign against known campaign fixtures
+        self.assertEqual(c[1].Id, 1)
+        self.assertEqual(c[1].fields['name'], "A. Foo: Content")
+        self.assertEqual(c[1].fields['advertiser_id'], 11)
 
-    def test_get_campaign_1(self):
-        campaign = self.client.campaigns(1)
+    def test_campaign_endpoint_access(self):
+        # Campaign 4 belongs to an agency which test client does not have access to
+        # c should be empty list which should automatically create error
+        try:
+            c = list(self.client.campaigns(4))
+        except AttributeError:
+            self.assertEqual(1, 1)
 
-        self.assertIsInstance(campaign, Campaign)
+        if len(c) != 0:
+            raise AssertionError('A campaign outside the scope of the test token was returned.')
 
-        self.assertEqual(campaign.Id, 1)
-        self.assertEqual(campaign.Name, 'A. Foo: Content')
+    def test_campaign_endpoint_offset(self):
+        c = list(self.client.campaigns(offset=1))
 
-        self.assertEqual(campaign.id, 1)
-        self.assertEqual(campaign.name, 'A. Foo: Content')
+        self.assertEqual(len(c), 2)
+       
+        c_names = [campaign['pk'] for campaign in c]
 
-        self.assertEqual(campaign.brand.id, 11)
-        self.assertEqual(campaign.brand.name, 'A. Foo Industries')
+        self.assertEqual(c_names, [2, 3])
+
+    def test_campaign_endpoint_limit(self):
+        c = list(self.client.campaigns(limit=2))
+
+        self.assertEqual(len(c), 2)
+
+        c_keys = [campaign['pk'] for campaign in c]
+
+        self.assertEqual(c_keys, [1, 2])
+
