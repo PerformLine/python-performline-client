@@ -25,12 +25,13 @@
 
 from __future__ import absolute_import
 from .models import Brand, Campaign, Rule, TrafficSource, Item
+from ...embedded.stdlib.utils.dicts import compact
 
 
 class CommonClientMethods(object):
     """Methods for retrieving data common to all products."""
 
-    def brands(self, id=None, **kwargs):
+    def brands(self, id=None, limit=None, offset=None):
         """
         Retrieve one or more brands associated with an account.
 
@@ -49,11 +50,14 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Brand.iall(self, **kwargs)
+            return Brand.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+            }))
         else:
             return Brand.get(self, id)
 
-    def campaigns(self, id=None, **kwargs):
+    def campaigns(self, id=None, limit=None, offset=None):
         """
         Retrieve one or more campaigns associated with an account.
 
@@ -73,11 +77,14 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            return Campaign.iall(self, **kwargs)
+            return Campaign.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+            }))
         else:
             return Campaign.get(self, id)
 
-    def rules(self, id=None, **kwargs):
+    def rules(self, id=None, limit=None, offset=None):
         """
         Retrieve one or more rules associated with an account.
 
@@ -96,11 +103,14 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Rule.iall(self, **kwargs)
+            return Rule.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+            }))
         else:
             return Rule.get(self, id)
 
-    def trafficsources(self, id=None, **kwargs):
+    def trafficsources(self, id=None, limit=None, offset=None):
 
         """
         Retrieve one or more traffic sources associated with an account.
@@ -120,11 +130,14 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return TrafficSource.iall(self, **kwargs)
+            return TrafficSource.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+            }))
         else:
             return TrafficSource.get(self, id)
 
-    def items(self, id=None, **kwargs):
+    def items(self, id=None, limit=None, offset=None):
         """
         Retrieve one or more scorable items associated with an account.
 
@@ -143,6 +156,9 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Item.iall(self, **kwargs)
+            return Item.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+            }))
         else:
             return Item.get(self, id)
