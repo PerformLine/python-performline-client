@@ -43,27 +43,28 @@ class TestCampaigns(unittest.TestCase):
         self.assertEqual(len(c), 3)
 
         #Test attributes of first campaign against known campaign fixtures
-        self.assertEqual(c[1].Id, 1)
-        self.assertEqual(c[1].fields['name'], "A. Foo: Content")
-        self.assertEqual(c[1].fields['advertiser_id'], 11)
+        self.assertEqual(first_c.Id, 1)
+        self.assertEqual(first_c.Name, "A. Foo: Content")
+        self.assertEqual(first_c.advertiser_id, 11)
 
     def test_campaign_endpoint_access(self):
         # Campaign 4 belongs to an agency which test client does not have access to
         # c should be empty list which should automatically create error
-        try:
-            c = list(self.client.campaigns(4))
-        except AttributeError:
-            self.assertEqual(1, 1)
 
-        if len(c) != 0:
+        c = self.client.campaigns(4)
+        # print str(c)
+
+        if len(list(c)) > 0:
             raise AssertionError('A campaign outside the scope of the test token was returned.')
+        else:
+            self.assertEqual()
 
     def test_campaign_endpoint_offset(self):
         c = list(self.client.campaigns(offset=1))
 
         self.assertEqual(len(c), 2)
        
-        c_names = [campaign['pk'] for campaign in c]
+        c_names = [campaign.Id for campaign in c]
 
         self.assertEqual(c_names, [2, 3])
 
@@ -72,7 +73,7 @@ class TestCampaigns(unittest.TestCase):
 
         self.assertEqual(len(c), 2)
 
-        c_keys = [campaign['pk'] for campaign in c]
+        c_keys = [campaign.Id for campaign in c]
 
         self.assertEqual(c_keys, [1, 2])
 

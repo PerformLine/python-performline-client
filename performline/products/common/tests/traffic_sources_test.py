@@ -45,8 +45,8 @@ class TestTrafficSources(unittest.TestCase):
 
         # Test attributes of first traffic source against known traffic source fixtures
         self.assertEqual(ts[1].Id, 1)
-        self.assertEqual(ts[1].fields['tag'], "906204150d942175ca729ecca2d646ea3389d359")
-        self.assertEqual(ts[1].fields['Agency'], [10])
+        self.assertEqual(ts[1].tag, "906204150d942175ca729ecca2d646ea3389d359")
+        self.assertEqual(ts[1].agency, [10])
 
     def test_traffic_source_end_point_access(self):
         # Traffic source 6 belongs to agency test client does not have access to
@@ -64,7 +64,7 @@ class TestTrafficSources(unittest.TestCase):
 
         self.assertEqual(len(ts), 4)
        
-        ts_names = [traffic_source['pk'] for traffic_source in ts]
+        ts_names = [traffic_source.Id for traffic_source in ts]
 
         self.assertEqual(ts_names, [2, 3, 4, 5])
 
@@ -73,7 +73,7 @@ class TestTrafficSources(unittest.TestCase):
 
         self.assertEqual(len(ts), 3)
 
-        ts_keys = [traffic_source['pk'] for traffic_source in ts]
+        ts_keys = [traffic_source.Id for traffic_source in ts]
 
         self.assertEqual(ts_keys, [1, 2, 3])
 
