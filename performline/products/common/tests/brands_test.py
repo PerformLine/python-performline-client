@@ -72,7 +72,7 @@ class TestBrands(unittest.TestCase):
         self.assertEqual(brand.id, 11)
         self.assertEqual(brand.name, 'A. Foo Industries')
 
-    def test_get_brand_in(self)
+    def test_get_brand_in(self):
         #Will test limit and offset parameters
         brands = list(self.client.brands())
         brands2 = list(self.client.brands(limit=2))
