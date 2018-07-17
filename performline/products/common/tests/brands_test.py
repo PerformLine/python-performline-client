@@ -55,7 +55,7 @@ class TestBrands(unittest.TestCase):
 
     def test_brand_endpoint_access(self):
         # Company token does not have access to Advertiser_id = 9  
-        brand = list(self.client.brands(9)
+        brand = list(self.client.brands(9))
 
         self.assertIsInstance(brand, list)
         self.assertTrue(len(brand) == 0)
