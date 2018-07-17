@@ -57,7 +57,7 @@ class CommonClientMethods(object):
         else:
             return Brand.get(self, id)
 
-    def campaigns(self, id=None, limit=None, offset=None):
+    def campaigns(self, id=None, limit=None, offset=None, brand=None):
         """
         Retrieve one or more campaigns associated with an account.
 
@@ -80,6 +80,7 @@ class CommonClientMethods(object):
             return Campaign.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
+                'brand': brand,
             }))
         else:
             return Campaign.get(self, id)
@@ -137,7 +138,7 @@ class CommonClientMethods(object):
         else:
             return TrafficSource.get(self, id)
 
-    def items(self, id=None, limit=None, offset=None):
+    def items(self, id=None, limit=None, offset=None, brand=None, campaign=None):
         """
         Retrieve one or more scorable items associated with an account.
 
@@ -159,6 +160,8 @@ class CommonClientMethods(object):
             return Item.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
+                'brand': brand,
+                'campaign': campaign,
             }))
         else:
             return Item.get(self, id)
