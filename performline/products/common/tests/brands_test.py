@@ -53,9 +53,9 @@ class TestBrands(unittest.TestCase):
         self.assertEqual(brands[2].id, 13)
         self.assertEqual(brands[2].name, 'Baz Media')
 
-    def test_campaign_endpoint_access(self):
+    def test_brand_endpoint_access(self):
         # Company token does not have access to Advertiser_id = 9  
-        brand = self.client.brands(9)
+        brand = list(self.client.brands(9)
 
         self.assertIsInstance(brand, list)
         self.assertTrue(len(brand) == 0)
@@ -76,7 +76,7 @@ class TestBrands(unittest.TestCase):
         #Will test limit and offset parameters
         brands = list(self.client.brands())
         brands2 = list(self.client.brands(limit=2))
-        brands3 - list(self.client.brands(offset=1))
+        brands3 = list(self.client.brands(offset=1))
 
         self.assertEqual(len(brands2), 2)
         self.assertEqual(brands2[0].id, 11) 
