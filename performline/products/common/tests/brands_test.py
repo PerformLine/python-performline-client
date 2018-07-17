@@ -36,9 +36,11 @@ class TestBrands(unittest.TestCase):
     def test_get_all_brands(self):
         brands = list(self.client.brands())
 
+        # Tests the list we just created have the correct number of brands
         self.assertIsInstance(brands, list)
-        self.assertTrue(len(brands) >= 3)
+        self.assertTrue(len(brands) == 3)
 
+        # Tests attributes of all brands in the list
         self.assertIsInstance(brands[0], Brand)
         self.assertEqual(brands[0].id, 11)
         self.assertEqual(brands[0].name, 'A. Foo Industries')
@@ -51,7 +53,15 @@ class TestBrands(unittest.TestCase):
         self.assertEqual(brands[2].id, 13)
         self.assertEqual(brands[2].name, 'Baz Media')
 
-    def test_get_brand_11(self):
+    def test_brand_endpoint_access(self):
+        # Company token does not have access to Advertiser_id = 9  
+        brand = list(self.client.brands(9))
+
+        self.assertIsInstance(brand, list)
+        self.assertTrue(len(brand) == 0)
+
+    def test_get_brand_by_id(self):
+        #Wil test that all attributes are returned for brand id = 11
         brand = self.client.brands(11)
 
         self.assertIsInstance(brand, Brand)
@@ -61,3 +71,17 @@ class TestBrands(unittest.TestCase):
 
         self.assertEqual(brand.id, 11)
         self.assertEqual(brand.name, 'A. Foo Industries')
+
+    def test_get_brand_in(self):
+        #Will test limit and offset parameters
+        brands = list(self.client.brands())
+        brands2 = list(self.client.brands(limit=2))
+        brands3 = list(self.client.brands(offset=1))
+
+        self.assertEqual(len(brands2), 2)
+        self.assertEqual(brands2[0].id, 11) 
+        self.assertEqual(brands2[1].id, 12)
+
+        self.assertEqual(len(brands3), 2)
+        self.assertEqual(brands3[0].id, 12) 
+        self.assertEqual(brands3[1].id, 13)
