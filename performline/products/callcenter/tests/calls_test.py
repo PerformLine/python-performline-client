@@ -26,6 +26,7 @@
 from __future__ import unicode_literals
 import unittest
 from ....testing import client
+from ..models import Call
 
 
 class TestCalls(unittest.TestCase):
@@ -33,4 +34,33 @@ class TestCalls(unittest.TestCase):
         self.client = client()
 
     def test_get_all_calls(self):
-        self.client.calls()
+        c = list(self.client.calls())
+
+        first_c = self.client.calls(1)
+
+        self.assertIsInstance(first_c, Call)
+
+        sef.assertEqual(first_c.Id, 1)
+        self.assertEqual(first_c.unique_hash, '3f076c5ef9351e9197b499926955d8d4')
+
+    def test_call_endpoint_access(self):
+        c = self.client.calls(6)
+        
+        self.assertTrue(len(c) == 0)
+
+    def test_call_endpoint_offset(self):
+        c = list(self.client.calls(offset=1))
+        self.assertEqual(len(c), 5)
+
+        c_names = [call.Id for call in c]
+        self.assertEqual(c_names, [1, 2, 3, 4, 5])
+
+    def test_call_endpoint_limit(self):
+        c = list(self.client.calls(limit=2))
+
+        self.assertEqual(len(c), 2)
+
+        c_keys = [call.Id for call in c]
+
+        self.assertEqual(c_keys, [1, 2])
+

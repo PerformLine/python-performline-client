@@ -45,7 +45,6 @@ class TestCampaigns(unittest.TestCase):
         #Test attributes of first campaign against known campaign fixtures
         self.assertEqual(first_c.Id, 1)
         self.assertEqual(first_c.Name, "A. Foo: Content")
-        self.assertEqual(first_c.advertiser_id, 11)
 
     def test_campaign_endpoint_access(self):
         # Campaign 4 belongs to an agency which test client does not have access to
@@ -57,7 +56,7 @@ class TestCampaigns(unittest.TestCase):
         if len(list(c)) > 0:
             raise AssertionError('A campaign outside the scope of the test token was returned.')
         else:
-            self.assertEqual()
+            self.assertEqual(1, 1)
 
     def test_campaign_endpoint_offset(self):
         c = list(self.client.campaigns(offset=1))
