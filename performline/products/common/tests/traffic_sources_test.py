@@ -45,19 +45,24 @@ class TestTrafficSources(unittest.TestCase):
 
         # Test attributes of first traffic source against known traffic source fixtures
         self.assertEqual(first_ts.Id, 1)
-        self.assertEqual(first_ts.tag, "906204150d942175ca729ecca2d646ea3389d359")
+        self.assertEqual(first_ts.unique_hash, "906204150d942175ca729ecca2d646ea3389d359")
         self.assertEqual(first_ts.agency, [10])
 
     def test_traffic_source_end_point_access(self):
         # Traffic source 6 belongs to agency test client does not have access to
         # ts should be empty list which should automatically create error
-        try:
-            ts = list(self.client.trafficsources(6))
-        except AttributeError:
-            self.assertEqual(1, 1)
 
-        if len(ts) != 0:
+        ts = self.client.trafficsources(6)
+
+        # try:
+            # ts = list(self.client.trafficsources(6))
+        # except AttributeError:
+            # self.assertEqual(1, 1)
+
+        if len(list(ts)) > 0:
             raise AssertionError('A traffic source outside the scope of the test token was returned.')
+        else:
+            self.assertEqual(1, 1)
 
     def test_traffic_source_endpoint_offset(self):
         ts = list(self.client.trafficsources(offset=1))
