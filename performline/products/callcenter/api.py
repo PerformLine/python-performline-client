@@ -25,12 +25,13 @@
 
 from __future__ import absolute_import
 from .models import Call
+from ...embedded.stdlib.utils.dicts import compact
 
 
 class CallCenterClientMethods(object):
     """Methods for retrieving data from the Call Center product"""
 
-    def calls(self, id=None, **kwargs):
+    def calls(self, id=None, limit=None, offset=None, brand=None, campaign=None):
         """
         Retrieve one or more calls associated with an account.
 
@@ -49,6 +50,11 @@ class CallCenterClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Call.iall(self, **kwargs)
+            return Call.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+                'brand': brand,
+                'campaign': campaign,
+            }))
         else:
             return Call.get(self, id)
