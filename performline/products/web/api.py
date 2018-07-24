@@ -1,4 +1,3 @@
-s
 # Copyright (c) 2016, PerformLine, Inc.
 # All rights reserved.
 #
