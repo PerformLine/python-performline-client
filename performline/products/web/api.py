@@ -25,12 +25,13 @@
 
 from __future__ import absolute_import
 from .models import WebPage
+from ...embedded.stdlib.utils.dicts import compact
 
 
 class WebClientMethods(object):
     """Methods for retrieving data from the Web product"""
 
-    def webpages(self, id=None, **kwargs):
+    def webpages(self, id=None, limit=None, offset=None, brand=None, campaign=None):
         """
         Retrieve one or more web pages registered for processing on an account.
 
@@ -49,6 +50,11 @@ class WebClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return WebPage.iall(self, **kwargs)
+            return WebPage.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+                'brand': brand,
+                'campaign': campaign,
+            }))
         else:
             return WebPage.get(self, id)
