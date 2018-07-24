@@ -25,12 +25,13 @@
 
 from __future__ import absolute_import
 from .models import Chat
+from ...embedded.stdlib.utils.dicts import compact
 
 
 class ChatScoutClientMethods(object):
     """Methods for retrieving data from the ChatScout product"""
 
-    def chats(self, id=None, **kwargs):
+    def chats(self, id=None, limit=None, offset=None, brand=None, campaign=None):
         """
         Retrieve one or more chats associated with an account.
 
@@ -49,6 +50,11 @@ class ChatScoutClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Chat.iall(self, **kwargs)
+            return Chat.iall(self, params=compact({
+                'limit': limit,
+                'offset': offset,
+                'brand': brand,
+                'campaign': campaign,                
+            }))
         else:
             return Chat.get(self, id)
