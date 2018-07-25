@@ -34,26 +34,46 @@ class TestCalls(unittest.TestCase):
         self.client = client()
 
     def test_get_all_calls(self):
+        # Testing that we retrieve all the calls for this token
+        # and that the first call is the correct call
         c = list(self.client.calls())
 
         first_c = self.client.calls(1)
 
+        self.assertEqual(len(c), 5)
         self.assertIsInstance(first_c, Call)
 
-        sef.assertEqual(first_c.Id, 1)
+        self.assertEqual(first_c.Id, 1)
         self.assertEqual(first_c.unique_hash, '3f076c5ef9351e9197b499926955d8d4')
 
     def test_call_endpoint_access(self):
-        c = self.client.calls(6)
+        # Call with id 5 should belong to an agency which we don't have access to
+        c = list(self.client.calls(5))
         
         self.assertTrue(len(c) == 0)
 
+    def test_call_endpoint_brand(self):
+        # We will have access to two CCM test brands: id 13 and id 14
+        # id 13 will have 2 campaigns (ids 5 and 6) with 2 calls in 4 and 1 call in 5 (3 calls total)
+        # and id 14 will only have 1 campaign (id 6) with 1 call
+
+        c = list(self.client.calls(brand=13))
+
+        self.assertEqual(len(c), 3)
+
+    def test_call_endpoint_campaign(self)
+        # Campaign 4 should have 2 calls associated with it
+        c=list(self.client.calls(campaign=4))
+
+        self.assertEqual(len(c), 2)
+
     def test_call_endpoint_offset(self):
+        
         c = list(self.client.calls(offset=1))
         self.assertEqual(len(c), 5)
 
-        c_names = [call.Id for call in c]
-        self.assertEqual(c_names, [1, 2, 3, 4, 5])
+        c_keys = [call.Id for call in c]
+        self.assertEqual(c_keys, [2, 3, 4])
 
     def test_call_endpoint_limit(self):
         c = list(self.client.calls(limit=2))
