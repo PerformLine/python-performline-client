@@ -49,7 +49,7 @@ class TestCalls(unittest.TestCase):
     def test_call_endpoint_access(self):
         # Call with id 5 should belong to an agency which we don't have access to
         c = list(self.client.calls(5))
-        
+
         self.assertTrue(len(c) == 0)
 
     def test_call_endpoint_brand(self):
@@ -61,14 +61,14 @@ class TestCalls(unittest.TestCase):
 
         self.assertEqual(len(c), 3)
 
-    def test_call_endpoint_campaign(self)
+    def test_call_endpoint_campaign(self):
         # Campaign 4 should have 2 calls associated with it
         c=list(self.client.calls(campaign=4))
 
         self.assertEqual(len(c), 2)
 
     def test_call_endpoint_offset(self):
-        
+
         c = list(self.client.calls(offset=1))
         self.assertEqual(len(c), 5)
 
