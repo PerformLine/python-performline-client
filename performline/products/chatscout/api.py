@@ -54,7 +54,8 @@ class ChatScoutClientMethods(object):
                 'limit': limit,
                 'offset': offset,
                 'brand': brand,
-                'campaign': campaign,                
+                'campaign': campaign,
             }))
         else:
             return Chat.get(self, id)
+
