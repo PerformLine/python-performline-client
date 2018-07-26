@@ -58,4 +58,3 @@ class ChatScoutClientMethods(object):
             }))
         else:
             return Chat.get(self, id)
-
