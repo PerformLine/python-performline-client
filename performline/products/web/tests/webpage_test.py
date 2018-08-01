@@ -25,7 +25,7 @@
 
 from __future__ import unicode_literals
 import unittest
-from ..models from Webpage
+from ..models import Webpage
 from ....testing import client
 
 
