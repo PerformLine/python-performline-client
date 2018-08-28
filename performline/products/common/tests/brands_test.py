@@ -43,15 +43,15 @@ class TestBrands(unittest.TestCase):
         # Tests attributes of all brands in the list
         self.assertIsInstance(brands[0], Brand)
         self.assertEqual(brands[0].id, 11)
-        self.assertEqual(brands[0].name, 'A. Foo Industries')
+        self.assertEqual(brands[0].name, 'Web API Test Brand, One')
 
         self.assertIsInstance(brands[1], Brand)
         self.assertEqual(brands[1].id, 12)
-        self.assertEqual(brands[1].name, 'BAR, Inc.')
+        self.assertEqual(brands[1].name, 'Web API Test Brand, Two')
 
         self.assertIsInstance(brands[2], Brand)
         self.assertEqual(brands[2].id, 13)
-        self.assertEqual(brands[2].name, 'Baz Media')
+        self.assertEqual(brands[2].name, 'CCM API Test Brand, Three')
 
     def test_brand_endpoint_access(self):
         # Company token does not have access to Advertiser_id = 9  
@@ -67,10 +67,10 @@ class TestBrands(unittest.TestCase):
         self.assertIsInstance(brand, Brand)
 
         self.assertEqual(brand.Id, 11)
-        self.assertEqual(brand.Name, 'A. Foo Industries')
+        self.assertEqual(brand.Name, 'Web API Test Brand, One')
 
         self.assertEqual(brand.id, 11)
-        self.assertEqual(brand.name, 'A. Foo Industries')
+        self.assertEqual(brand.name, 'Web API Test Brand, One')
 
     def test_get_brand_in(self):
         #Will test limit and offset parameters
