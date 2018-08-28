@@ -40,7 +40,7 @@ class TestCalls(unittest.TestCase):
 
         first_c = self.client.calls(1)
 
-        self.assertEqual(len(c), 5)
+        self.assertEqual(len(c), 4)
         self.assertIsInstance(first_c, Call)
 
         self.assertEqual(first_c.Id, 1)
@@ -59,18 +59,18 @@ class TestCalls(unittest.TestCase):
 
         c = list(self.client.calls(brand=13))
 
-        self.assertEqual(len(c), 3)
+        self.assertEqual(len(c), 4)
 
     def test_call_endpoint_campaign(self):
         # Campaign 4 should have 2 calls associated with it
-        c=list(self.client.calls(campaign=4))
+        c=list(self.client.calls(campaign=5))
 
         self.assertEqual(len(c), 2)
 
     def test_call_endpoint_offset(self):
 
         c = list(self.client.calls(offset=1))
-        self.assertEqual(len(c), 5)
+        self.assertEqual(len(c), 3)
 
         c_keys = [call.Id for call in c]
         self.assertEqual(c_keys, [2, 3, 4])

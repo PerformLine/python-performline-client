@@ -40,11 +40,11 @@ class TestCampaigns(unittest.TestCase):
         self.assertIsInstance(first_c, Campaign)
 
         #Testing that the appropriate number of campaigns are returned
-        self.assertEqual(len(c), 3)
+        self.assertEqual(len(c), 6)
 
         #Test attributes of first campaign against known campaign fixtures
         self.assertEqual(first_c.Id, 1)
-        self.assertEqual(first_c.Name, "A. Foo: Content")
+        self.assertEqual(first_c.Name, "Web API Test Campaign, One")
 
     def test_campaign_endpoint_access(self):
         # Campaign 4 belongs to an agency which test client does not have access to
@@ -61,11 +61,11 @@ class TestCampaigns(unittest.TestCase):
     def test_campaign_endpoint_offset(self):
         c = list(self.client.campaigns(offset=1))
 
-        self.assertEqual(len(c), 2)
+        self.assertEqual(len(c), 5)
        
         c_names = [campaign.Id for campaign in c]
 
-        self.assertEqual(c_names, [2, 3])
+        self.assertEqual(c_names, [2, 3, 5, 6, 7])
 
     def test_campaign_endpoint_limit(self):
         c = list(self.client.campaigns(limit=2))

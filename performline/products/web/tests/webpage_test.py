@@ -25,7 +25,7 @@
 
 from __future__ import unicode_literals
 import unittest
-from ..models import Webpage
+from ..models import WebPage
 from ....testing import client
 
 
@@ -36,7 +36,7 @@ class TestPages(unittest.TestCase):
     def test_get_all_pages(self):
         pages = list(self.client.webpages())
         self.assertIsInstance(pages, list)
-        self.assertTrue(len(pages) = 3)
+        self.assertTrue(len(pages) == 3)
 
         page = pages[0]
 
