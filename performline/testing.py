@@ -34,7 +34,7 @@ def client():
         loglevel=os.environ.get('LOGLEVEL', 'WARNING')
     )
 
-    url = os.environ.get('PERFORMLINE_API_URL')
+    url = os.environ.get('PERFORMLINE_API_URL', 'http://localhost:8086')
     prefix = os.environ.get('PERFORMLINE_API_PREFIX')
 
     if url is not None:

@@ -40,7 +40,7 @@ class TestPages(unittest.TestCase):
 
         page = pages[0]
 
-        self.assertIsInstance(page, Webpage)
+        self.assertIsInstance(page, WebPage)
         self.assertEqual(page.Id, 10)
         self.assertEqual(page.Type, 'web')
         self.assertEqual(page.Score, 80)
@@ -94,12 +94,12 @@ class TestPages(unittest.TestCase):
 
         pages_in_campaign = list(self.client.webpages(campaign=3))
 
-        self.assertEqual(len(pages_in_campaign, 2))
+        self.assertEqual(len(pages_in_campaign), 2)
         self.assertEqual(pages_in_limit[0], 10)
         self.assertEqual(pages_in_limit[1], 11)
 
         pages_in_brand = list(self.client.webpages(brand=12))
 
-        self.assertEqual(len(pages_in_brand, 2))
+        self.assertEqual(len(pages_in_brand), 2)
         self.assertEqual(pages_in_limit[0], 11)
         self.assertEqual(pages_in_limit[1], 12)
