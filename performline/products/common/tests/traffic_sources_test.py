@@ -45,8 +45,7 @@ class TestTrafficSources(unittest.TestCase):
 
         # Test attributes of first traffic source against known traffic source fixtures
         self.assertEqual(first_ts.Id, 1)
-        self.assertEqual(first_ts.unique_hash, "906204150d942175ca729ecca2d646ea3389d359")
-        self.assertEqual(first_ts.agency, [10])
+        self.assertEqual(first_ts.CompanyId, 10)
 
     def test_traffic_source_end_point_access(self):
         # Traffic source 6 belongs to agency test client does not have access to

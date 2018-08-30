@@ -36,7 +36,7 @@ class TestPages(unittest.TestCase):
     def test_get_all_pages(self):
         pages = list(self.client.webpages())
         self.assertIsInstance(pages, list)
-        self.assertTrue(len(pages) == 3)
+        self.assertEqual(len(pages), 3)
 
         page = pages[0]
 
@@ -63,7 +63,7 @@ class TestPages(unittest.TestCase):
         #Wil test that all attributes are returned for page id = 11
         page = self.client.webpages(11)
 
-        self.assertIsInstance(page, Webpage)
+        self.assertIsInstance(page, WebPage)
 
         self.assertEqual(page.Id, 11)
         self.assertEqual(page.Type, 'web')
@@ -72,9 +72,8 @@ class TestPages(unittest.TestCase):
         self.assertEqual(page.CampaignId, 3)
         self.assertEqual(page.BrandId, 12)
         self.assertEqual(page.CompanyId, 10)
-        self.assertEqual(page.CreatedAt, '2018-7-24T00:00:00')
+        self.assertEqual(page.CreatedAt, '2018-07-24T00:00:00-04:00')
         self.assertEqual(page.Url, "https://www.washingtonpost.com")
-        self.assertEqual(page.CreatedAt, '2018-7-25T00:00:00')
 
     def test_get_webpage_in(self):
         #Will test parameters
@@ -82,13 +81,13 @@ class TestPages(unittest.TestCase):
 
         pages_in_limit = list(self.client.webpages(limit=2))
 
-        self.assertEqual(len(pages_in_limit, 2))
-        self.assertEqual(pages_in_limit[0], 10)
-        self.assertEqual(pages_in_limit[1], 11)
+        self.assertEqual(len(pages_in_limit), 2)
+        self.assertEqual(pages_in_limit[0].id, 10)
+        self.assertEqual(pages_in_limit[1].id, 11)
 
         pages_in_offset = list(self.client.webpages(offset=1))
 
-        self.assertEqual(len(pages_in_offset, 2))
+        self.assertEqual(len(pages_in_offset), 2)
         self.assertEqual(pages_in_limit[0], 11)
         self.assertEqual(pages_in_limit[1], 12)
 
