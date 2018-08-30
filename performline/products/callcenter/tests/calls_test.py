@@ -38,13 +38,17 @@ class TestCalls(unittest.TestCase):
         # and that the first call is the correct call
         c = list(self.client.calls())
 
-        first_c = self.client.calls(1)
+        first_c = c[0]
 
         self.assertEqual(len(c), 4)
         self.assertIsInstance(first_c, Call)
 
         self.assertEqual(first_c.Id, 1)
-        self.assertEqual(first_c.unique_hash, '3f076c5ef9351e9197b499926955d8d4')
+        self.assertEqual(first_c.Type, 'callcenter')
+        self.assertEqual(first_c.TrafficSourceId, 1)
+        self.assertEqual(first_c.CampaignId, 5)
+        self.assertEqual(first_c.BrandId, 13)
+        self.assertEqual(first_c.CompanyId, 10)
 
     def test_call_endpoint_access(self):
         # Call with id 5 should belong to an agency which we don't have access to
