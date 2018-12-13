@@ -80,4 +80,6 @@ package: package-build package-sign package-push
 
 package-test: deps library-prefix test package-build package-sign package-push-test clean-cache
 
-
+shell:
+	test -x ./env/bin/ipython || ./env/bin/pip install ipython
+	./env/bin/ipython
