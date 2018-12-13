@@ -26,6 +26,7 @@
 from __future__ import unicode_literals
 import unittest
 from ....testing import client
+from ..models import Chat
 
 
 class TestChats(unittest.TestCase):
@@ -35,25 +36,25 @@ class TestChats(unittest.TestCase):
     def test_get_all_chats(self):
         chats = list(self.client.chats())
         self.assertIsInstance(chats, list)
-        self.assertEqual(len(chats), 2)
+        self.assertEqual(len(chats), 3)
 
         chat = chats[0]
 
         self.assertIsInstance(chat, Chat)
         self.assertEqual(chat.Id, 6)
-        self.assertEqual(chat.Type, 'Chat')
+        self.assertEqual(chat.Type, 'chat')
         self.assertEqual(chat.Score, 80)
-        self.assertEqual(chat.TrafficSourceId, )
+        self.assertEqual(chat.TrafficSourceId, 1)
         self.assertEqual(chat.CampaignId, 9)
         self.assertEqual(chat.BrandId, 15)
         self.assertEqual(chat.CompanyId, 10)
-        self.assertEqual(chat.CreatedAt, '2018-7-24T00:00:00')
-        self.assertEqual(chat.LastScoredAt, '2018-7-24T04:00:00')
+        self.assertEqual(chat.CreatedAt, '2018-07-24T00:00:00-04:00')
+        self.assertEqual(chat.LastScoredAt, '2018-07-24T00:00:00-04:00')
 
 
     def test_chat_endpoint_access(self):
-        # Company token does not have access to page_id = 8 
-        chat = list(self.client.chats(8))
+        # Company token does not have access to page_id = 9 
+        chat = list(self.client.chats(9))   
         
         self.assertIsInstance(chat, list)
         self.assertTrue(len(chat) == 0)
@@ -72,7 +73,7 @@ class TestChats(unittest.TestCase):
         self.assertEqual(chat.BrandId, 15)
         self.assertEqual(chat.CompanyId, 10)
         self.assertEqual(chat.CreatedAt, '2018-07-24T00:00:00-04:00')
-        self.assertEqual(chat.LastScored, '2018-07-24T00:00:00-04:00')
+        self.assertEqual(chat.LastScoredAt, '2018-08-24T00:00:00-04:00')
 
     def test_get_chat_in(self):
         #Will test parameters
@@ -84,21 +85,21 @@ class TestChats(unittest.TestCase):
         self.assertEqual(chats_in_limit[0].id, 6)
         self.assertEqual(chats_in_limit[1].id, 7)
 
-        chats_in_offset = list(self.client.webchats(offset=1))
+        chats_in_offset = list(self.client.chats(offset=1))
 
         self.assertEqual(len(chats_in_offset), 2)
-        self.assertEqual(chats_in_limit[0], 7)
-        self.assertEqual(chats_in_limit[1], 8)
+        self.assertEqual(chats_in_offset[0].id, 7)
+        self.assertEqual(chats_in_offset[1].id, 8)
 
-        chats_in_campaign = list(self.client.webchats(campaign=9))
+        chats_in_campaign = list(self.client.chats(campaign=9))
 
         self.assertEqual(len(chats_in_campaign), 2)
-        self.assertEqual(chats_in_campaign[0], 6)
-        self.assertEqual(chats_in_campaign[1], 7)
+        self.assertEqual(chats_in_campaign[0].id, 6)
+        self.assertEqual(chats_in_campaign[1].id, 7)
 
-        chats_in_brand = list(self.client.webchats(brand=15))
+        chats_in_brand = list(self.client.chats(brand=15))
 
-        self.assertEqual(len(chats_in_brand), 2)
-        self.assertEqual(chats_in_brand[0], 6)
-        self.assertEqual(chats_in_brand[1], 7)
+        self.assertEqual(len(chats_in_brand), 3)
+        self.assertEqual(chats_in_brand[0].id, 6)
+        self.assertEqual(chats_in_brand[1].id, 7)
     
