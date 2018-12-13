@@ -38,7 +38,7 @@ class TestBrands(unittest.TestCase):
 
         # Tests the list we just created have the correct number of brands
         self.assertIsInstance(brands, list)
-        self.assertTrue(len(brands) == 3)
+        self.assertTrue(len(brands) == 5)
 
         # Tests attributes of all brands in the list
         self.assertIsInstance(brands[0], Brand)
@@ -50,7 +50,7 @@ class TestBrands(unittest.TestCase):
         self.assertEqual(brands[1].name, 'Web API Test Brand, Two')
 
         self.assertIsInstance(brands[2], Brand)
-        self.assertEqual(brands[2].id, 13)
+        self.assertEqual(brands[2].id, 13)    
         self.assertEqual(brands[2].name, 'CCM API Test Brand, Three')
 
     def test_brand_endpoint_access(self):
@@ -76,12 +76,12 @@ class TestBrands(unittest.TestCase):
         #Will test limit and offset parameters
         brands = list(self.client.brands())
         brands2 = list(self.client.brands(limit=2))
-        brands3 = list(self.client.brands(offset=1))
+        brands3 = list(self.client.brands(offset=3))
 
         self.assertEqual(len(brands2), 2)
         self.assertEqual(brands2[0].id, 11) 
         self.assertEqual(brands2[1].id, 12)
 
         self.assertEqual(len(brands3), 2)
-        self.assertEqual(brands3[0].id, 12) 
-        self.assertEqual(brands3[1].id, 13)
+        self.assertEqual(brands3[0].id, 15) 
+        self.assertEqual(brands3[1].id, 16)

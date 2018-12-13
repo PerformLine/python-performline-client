@@ -40,7 +40,7 @@ class TestCampaigns(unittest.TestCase):
         self.assertIsInstance(first_c, Campaign)
 
         #Testing that the appropriate number of campaigns are returned
-        self.assertEqual(len(c), 6)
+        self.assertEqual(len(c), 9)
 
         #Test attributes of first campaign against known campaign fixtures
         self.assertEqual(first_c.Id, 1)
@@ -61,11 +61,11 @@ class TestCampaigns(unittest.TestCase):
     def test_campaign_endpoint_offset(self):
         c = list(self.client.campaigns(offset=1))
 
-        self.assertEqual(len(c), 5)
+        self.assertEqual(len(c), 8)
        
         c_names = [campaign.Id for campaign in c]
 
-        self.assertEqual(c_names, [2, 3, 5, 6, 7])
+        self.assertEqual(c_names, [2, 3, 5, 6, 7, 9, 10, 11])
 
     def test_campaign_endpoint_limit(self):
         c = list(self.client.campaigns(limit=2))
