@@ -39,7 +39,7 @@ setup(
         'requests',
         'pyyaml',
         'statsd',
-        'python-dateutil<2.7.0',
+        'python-dateutil<2.9.0',
         'six',
         'requests_mock',
     ],
