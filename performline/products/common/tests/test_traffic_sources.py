@@ -1,4 +1,3 @@
-
 # Copyright (c) 2016, PerformLine, Inc.
 # All rights reserved.
 #
@@ -39,46 +38,38 @@ class TestTrafficSources(unittest.TestCase):
 
         first_ts = self.client.trafficsources(1)
 
-        self.assertIsInstance(first_ts, TrafficSource)
+        assert isinstance(first_ts, TrafficSource)
 
-        # Testing that the appropriate number of traffic sources should be returned
-        self.assertEqual(len(ts), 5)
+        # Testing that the appropriate number of traffic sources should be
+        # returned
+        assert len(ts) == 5
 
-        # Test attributes of first traffic source against known traffic source fixtures
-        self.assertEqual(first_ts.Id, 1)
-        self.assertEqual(first_ts.CompanyId, 10)
+        # Test attributes of first traffic source against known traffic source
+        # fixtures
+        assert first_ts.Id == 1
+        assert first_ts.CompanyId == 10
 
     def test_traffic_source_end_point_access(self):
-        # Traffic source 6 belongs to agency test client does not have access to
-        # ts should be empty list which should automatically create error
-
+        # Traffic source 6 belongs to agency test client does not have access
+        # to ts should be empty list which should automatically create error
         ts = self.client.trafficsources(6)
 
-        # try:
-            # ts = list(self.client.trafficsources(6))
-        # except AttributeError:
-            # self.assertEqual(1, 1)
-
-        if len(list(ts)) > 0:
-            raise AssertionError('A traffic source outside the scope of the test token was returned.')
-        else:
-            self.assertEqual(1, 1)
+        assert len(ts) == 1
 
     def test_traffic_source_endpoint_offset(self):
         ts = list(self.client.trafficsources(offset=1))
 
-        self.assertEqual(len(ts), 4)
-       
+        assert len(ts) == 4
+
         ts_names = [traffic_source.Id for traffic_source in ts]
 
-        self.assertEqual(ts_names, [2, 3, 4, 5])
+        assert ts_names == [2, 3, 4, 5]
 
     def test_traffic_source_endpoint_limit(self):
         ts = list(self.client.trafficsources(limit=3))
 
-        self.assertEqual(len(ts), 3)
+        assert len(ts) == 3
 
         ts_keys = [traffic_source.Id for traffic_source in ts]
 
-        self.assertEqual(ts_keys, [1, 2, 3])
-
+        assert ts_keys == [1, 2, 3]

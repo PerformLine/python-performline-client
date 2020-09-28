@@ -9,31 +9,34 @@ from .exceptions import UnsupportedOperation
 
 class RestModel(object):
     """
-    Represents individual objects that can be read, created, and/or update via a given client.
+    Represents individual objects that can be read, created, and/or updated
+    via a given client.
 
     Args:
-        rest_root (str, abstract): The path that will be called when operating on this model
-            object.  All interactions with objects of this type will have this path prepended to
-            them when making HTTP calls.  For operations on specific instances, this value will be
-            combined with ``primary_key`` to form the final path.  For example:
+        rest_root (str, abstract): The path that will be called when
+        operating on this model object.  All interactions with objects of
+        this type will have this path prepended to them when making HTTP
+        calls.  For operations on specific instances, this value will be
+        combined with ``primary_key`` to form the final path.  For example:
 
-            If ``rest_root = '/example/'`` and ``primary_key = 'id'``, the pattern for retrieving a
-            single object will be "/example/{id}/".  This path will will then have the `format()`
-            method called on it whenever it is used with the current value of the ``data`` property
-            passed in as `**kwargs`.  This allows data values to be interpolated into the path at
-            call time.
+            If ``rest_root = '/example/'`` and ``primary_key = 'id'``,
+            the pattern for retrieving a single object will be "/example/{
+            id}/".  This path will will then have the `format()` method
+            called on it whenever it is used with the current value of the
+            ``data`` property passed in as `**kwargs`.  This allows data
+            values to be interpolated into the path at call time.
 
-            This value must be set (explictly during instantiation or implicitly in a subclass)
-            before the class can be used.
+            This value must be set (explictly during instantiation or
+            implicitly in a subclass) before the class can be used.
 
-        rest_read_method (str, optional): The HTTP method that will be used for retrieving the
-            object this instance represents.
+        rest_read_method (str, optional): The HTTP method that will be used
+        for retrieving the object this instance represents.
 
-        rest_create_method (str, optional): The HTTP method that will be used for creating the
-            object this instance represents.
+        rest_create_method (str, optional): The HTTP method that will be
+        used for creating the object this instance represents.
 
-        rest_update_method (str, optional): The HTTP method that will be used for updating the
-            object this instance represents.
+        rest_update_method (str, optional): The HTTP method that will be
+        used for updating the object this instance represents.
     """
 
     primary_key = 'id'
@@ -53,19 +56,23 @@ class RestModel(object):
         secondary_key=None
     ):
         """
-        Provides a simplified interface for working with standard REST API responses.
+        Provides a simplified interface for working with standard REST API
+        responses.
 
         Args:
-            client (:class:`~performline.clients.rest.StandardRestClient`): The REST client that
-                was used to retrieve the data or one that will be used to persist it.
+            client (:class:`~performline.clients.rest.StandardRestClient`):
+            The REST client that was used to retrieve the data or one that
+            will be used to persist it.
 
             data (dict): The dictionary that represents this model.
 
-            rest_root (str, optional): If specified, this will set or override the base path this
-                instance uses to retrieve or persist data.
+            rest_root (str, optional): If specified, this will set or
+            override the base path this instance uses to retrieve or persist
+            data.
 
-            primary_key (str, optional): If specified, this field name will be used for all
-                operations that occur on a specific instance of this object.
+            primary_key (str, optional): If specified, this field name will
+            be used for all operations that occur on a specific instance of
+            this object.
         """
 
         if rest_root is not None:
@@ -97,11 +104,11 @@ class RestModel(object):
         Retrieve a single instance of this model by its primary key.
 
         Args:
-            client (:class:`StandardRestClient`): The client instance that will be used to perform
-                the underlying request.
+            client (:class:`StandardRestClient`): The client instance that
+            will be used to perform the underlying request.
 
-            pk (any): A unique value that unambiguously represents the specific instance being
-                sought.
+            pk (any): A unique value that unambiguously represents the
+            specific instance being sought.
 
         Returns:
             :class:`RestModel`
@@ -109,7 +116,8 @@ class RestModel(object):
         if cls.secondary_key is not None:
             if not isinstance(pk, (list, tuple)) or len(pk) == 1:
                 raise AttributeError(
-                    "Multiple components are required to retrieve this item, 1 given."
+                    "Multiple components are required to retrieve this item,"
+                    "1 given."
                 )
 
             return cls(client, {
@@ -124,24 +132,28 @@ class RestModel(object):
     @classmethod
     def iall(cls, client, autoload=False, **kwargs):
         """
-        Iterator to retrieve all instances of this model, automatically paging through paginated
-        result sets and aggregating the instances into a single list.
+        Iterator to retrieve all instances of this model, automatically
+        paging through paginated result sets and aggregating the instances
+        into a single list.
 
         Args:
-            client (:class:`StandardRestClient`): The client instance that will be used to perform
-                the underlying request.
+            client (:class:`StandardRestClient`): The client instance that
+            will be used to perform the underlying request.
 
-            autoload (bool): Whether each retrieved instance should automatically be reloaded from
-                the server to fully populate its data.
+            autoload (bool): Whether each retrieved instance should
+            automatically be reloaded from the server to fully populate its
+            data.
         """
         for response in client.get_until(cls.rest_root, **kwargs):
             if os.environ.get('DEBUG') in ['1', 'true']:
                 import json
-                print('[DEBUG] {}'.format(json.dumps(response.payload, indent=4)))
+                print('[DEBUG] {}'.format(
+                    json.dumps(response.payload, indent=4))
+                )
 
             # for each result
             for item in response.results():
-                # format the list result item the same way formatted_path would
+                # format list result item in the same way as formatted_path
                 item = underscore_dict(item)
 
                 # get the value of the primary key field
@@ -166,15 +178,16 @@ class RestModel(object):
     @classmethod
     def all(cls, client, autoload=True, **kwargs):
         """
-        Retrieve all instances of this model, automatically paging through paginated result sets
-        and aggregating the instances into a single list.
+        Retrieve all instances of this model, automatically paging through
+        paginated result sets and aggregating the instances into a single list.
 
         Args:
-            client (:class:`StandardRestClient`): The client instance that will be used to perform
-                the underlying request.
+            client (:class:`StandardRestClient`): The client instance that
+            will be used to perform the underlying request.
 
-            autoload (bool): Whether each retrieved instance should automatically be reloaded from
-                the server to fully populate its data.
+            autoload (bool): Whether each retrieved instance should
+            automatically be reloaded from the server to fully populate its
+            data.
 
         Returns:
             list
@@ -219,8 +232,8 @@ class RestModel(object):
     @property
     def _metadata(self):
         """
-        Retrieves any metadata associated with the model as returned from the server when
-        performing a :func:`retrieve` call.
+        Retrieves any metadata associated with the model as returned from
+        the server when performing a :func:`retrieve` call.
 
         Returns:
             dict
@@ -230,9 +243,10 @@ class RestModel(object):
     @property
     def instance_path(self):
         """
-        Retrieve the canonical URL path pattern representing a single instance of this model
-        (``rest_root`` combined with ``primary_key``).  This is a pattern that will be processed
-        with :func:`format` to form the final path at call time.
+        Retrieve the canonical URL path pattern representing a single
+        instance of this model (``rest_root`` combined with
+        ``primary_key``). This is a pattern that will be processed with
+        :func:`format` to form the final path at call time.
 
         Returns:
             str
@@ -244,8 +258,9 @@ class RestModel(object):
 
     def formatted_path(self, additional_args={}):
         """
-        Returns the ``instance_path`` with data (and, if specified, additional/override arguments)
-        interpolated in.  This method uses the standard Python ``format()`` function.
+        Returns the ``instance_path`` with data (and, if specified,
+        additional/override arguments) interpolated in.  This method uses
+        the standard Python ``format()`` function.
 
         Returns:
             str
@@ -271,24 +286,26 @@ class RestModel(object):
 
     def set_data(self, data):
         """
-        Updates the model's underlying data, processing it with :func:`prepare_data_from_retrieval`
-        first.
+        Updates the model's underlying data, processing it with
+        :func:`prepare_data_from_retrieval` first.
         """
         self.__data = self.prepare_data_from_retrieval(data)
 
     def set_metadata(self, metadata):
         """
-        Updates the model's metadata, processing it with :func:`prepare_metadata_from_retrieval`.
+        Updates the model's metadata, processing it with
+        :func:`prepare_metadata_from_retrieval`.
         first.
         """
         self.__metadata = self.prepare_metadata_from_retrieval(metadata)
 
     def prepare_data_from_retrieval(self, data):
         """
-        A method used to prepare data as retrieved from the client in response to a retrieve (GET)
-        request.  This default implementation processes the data through
-        :func:`~performline.utils.dicts.camelize_dict`, but can be overridden in a subclass to
-        perform custom post-processing.
+        A method used to prepare data as retrieved from the client in
+        response to a retrieve (GET) request.  This default implementation
+        processes the data through
+        :func:`~performline.utils.dicts.camelize_dict`, but can be
+        overridden in a subclass to perform custom post-processing.
 
         Returns:
             dict of post-processed data.
@@ -297,10 +314,10 @@ class RestModel(object):
 
     def prepare_metadata_from_retrieval(self, metadata):
         """
-        A method used to prepare metadata as retrieved from the client in response to a
-        retrieve (GET) request.  This default implementation passes the metadata to
-        :func:`prepare_data_from_retrieval`, but can be overridden in a subclass to perform custom
-        post-processing.
+        A method used to prepare metadata as retrieved from the client in
+        response to a retrieve (GET) request.  This default implementation
+        passes the metadata to :func:`prepare_data_from_retrieval`, but can
+        be overridden in a subclass to perform custom post-processing.
 
         Returns:
             dict of post-processed metadata.
@@ -310,12 +327,14 @@ class RestModel(object):
 
     def prepare_data_for_update(self, data):
         """
-        A method used to prepare the model's data for submission to the service (POST/PUT). This
-        default implementation is a no-op and returns the given ``data`` as-is, but can be
-        overridden in a subclass to perform custom pre-processing.
+        A method used to prepare the model's data for submission to the
+        service (POST/PUT). This default implementation is a no-op and
+        returns the given ``data`` as-is, but can be overridden in a
+        subclass to perform custom pre-processing.
 
         Args:
-            data (dict): The model's data about to be sent to the upstream service.
+            data (dict): The model's data about to be sent to the upstream
+                service.
 
         Returns:
             dict of pre-processed data.
@@ -338,9 +357,13 @@ class RestModel(object):
         """
 
         if self.rest_read_method is None:
-            raise UnsupportedOperation("Retrieval is not supported on {0}".format(self.__class__))
+            raise UnsupportedOperation(
+                "Retrieval is not supported on {0}".format(self.__class__)
+            )
 
-        response = self.client.request(self.rest_read_method, self.formatted_path())
+        response = self.client.request(
+            self.rest_read_method, self.formatted_path()
+        )
         result = response.results(0)
 
         self.set_data(result)
@@ -353,17 +376,20 @@ class RestModel(object):
         Persists this model's current data to the server.
 
         Args:
-            refresh (bool): Whether to automatically refresh the model with the data that was
+            refresh (bool): Whether to automatically refresh the model with
+            the data that was
                 just persisted.
 
-            compact (bool, lambda, optional): Whether the data should be compacted before being
-                submitted to the server.  If this is True, _None_ values will be removed.  If this
-                is a lambda matching the signature ``f(key,value) -> bool``, that will be the
-                function that determines which keys are kept (return True) and which are rejected
-                (return False).
+            compact (bool, lambda, optional): Whether the data should be
+                compacted before being submitted to the server.  If this is
+                True, _None_ values will be removed.  If this
+                is a lambda matching the signature ``f(key,value) -> bool``,
+                that will be the function that determines which keys are
+                kept (return True) and which are rejected (return False).
 
         Raises:
-            AttributeError if the given ``key_attr`` is not a valid attribute on this instance.
+            AttributeError if the given ``key_attr`` is not a valid attribute
+            on this instance.
         """
 
         if self.rest_create_method is None and self.rest_update_method is None:
@@ -373,7 +399,8 @@ class RestModel(object):
 
         data = self._data
 
-        # compacts the data (either with the default method or with a user-specified one)
+        # compacts the data (either with the default method or with a
+        # user-specified one)
         if compact:
             if isinstance(compact, type(lambda: 0)):
                 data = utils_compact(data, compact)
@@ -411,16 +438,19 @@ class RestModel(object):
 
     def __getattr__(self, name):
         """
-        Retrieves the named attribute as if it were a property if it exists in this model's
-        response payload.  Otherwise, the attribute behaves normally.  Attributes that start
-        with an underscore (_) will be passed along to the normal attribute handler as usual.
+        Retrieves the named attribute as if it were a property if it exists
+        in this model's response payload.  Otherwise, the attribute behaves
+        normally.  Attributes that start with an underscore (_) will be
+        passed along to the normal attribute handler as usual.
 
         Returns:
             any
         """
         if not name.startswith('_'):
             candidate_key = camelize(name, True)
-            value = deep_get(self._data, name, deep_get(self._data, candidate_key))
+            value = deep_get(
+                self._data, name, deep_get(self._data, candidate_key)
+            )
 
             if value is not None:
                 return value
@@ -429,8 +459,8 @@ class RestModel(object):
         key = u(camelize(name, True))
 
         if isinstance(self._data, dict):
-            if key in [u(camelize(k, True)) for k in self._data.keys()] \
-                    or key in [u(camelize(k, True)) for k in self.fields]:
+            if key in [u(camelize(k, True)) for k in self._data.keys()] or \
+                key in [u(camelize(k, True)) for k in self.fields]:
                     self._data[key] = value
 
         object.__setattr__(self, name, value)

@@ -30,7 +30,9 @@ from ...embedded.stdlib.utils.dicts import compact
 
 
 class Brand(RestModel):
-    """An object for retrieving data from and working with an individual brand."""
+    """
+    An object for retrieving data from and working with an individual brand.
+    """
     rest_root = '/common/brands/'
 
     def campaigns(self, limit=None, offset=None):
@@ -41,8 +43,27 @@ class Brand(RestModel):
         }))
 
 
+class BrandRules(RestModel):
+    """
+    An object for retrieving data rules for a specic brand.
+    """
+    rest_root = '/brands/:brand_id/rules/'
+
+    def rules(self, limit=None, offset=None):
+        return BrandRules.iall(self.client, params=compact(
+            {
+                'brand': self.id,
+                'limit': limit,
+                'offset': offset,
+            }
+        ))
+
+
 class Campaign(RestModel):
-    """An object for retrieving data from and working with an individual campaign."""
+    """
+    An object for retrieving data from and working with an individual
+    campaign.
+    """
     rest_root = '/common/campaigns/'
 
     @property
@@ -57,11 +78,11 @@ class Campaign(RestModel):
             'offset': offset,
         }))
 
-    # def rules(self):
-
 
 class Rule(RestModel):
-    """An object for retrieving data from and working with an individual rule."""
+    """
+    An object for retrieving data from and working with an individual rule.
+    """
     rest_root = '/common/rules/'
 
     # def brand(self):
@@ -70,13 +91,18 @@ class Rule(RestModel):
 
 
 class TrafficSource(RestModel):
-    """An object for retrieving data from and working with an individual traffic source."""
+    """
+    An object for retrieving data from and working with an individual traffic
+    source.
+    """
     rest_root = '/common/trafficsources/'
 
 
 class Item(RestModel):
-    """An object for retrieving data from and working with scorable content,
-    regardless of product."""
+    """
+    An object for retrieving data from and working with scorable content,
+    regardless of product.
+    """
     rest_root = '/common/items/'
 
     @property
@@ -90,3 +116,15 @@ class Item(RestModel):
     @property
     def traffic_source(self):
         return TrafficSource.get(self.client, self.traffic_source_id)
+
+
+class RemediationStatus(RestModel):
+    """
+    An object for retrieving all available remediation statuses in the 
+    platform.
+    """
+    rest_root = '/common/remediation_status'
+    
+    @property
+    def remediation_status(self):
+        return RemediationStatus.get(self.client)

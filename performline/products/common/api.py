@@ -24,7 +24,14 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import absolute_import
-from .models import Brand, Campaign, Rule, TrafficSource, Item
+from .models import (
+    Brand,
+    Campaign,
+    Rule,
+    TrafficSource,
+    Item,
+    RemediationStatus,
+)
 from ...embedded.stdlib.utils.dicts import compact
 
 
@@ -165,3 +172,14 @@ class CommonClientMethods(object):
             }))
         else:
             return Item.get(self, id)
+
+    def remediation_status(self):
+        """
+        Retrieve all available remediation statuses available in the Performline platform.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.RemediationStatuses`,
+            which has a property returning a list of strings representing the
+            available remediation statuses.
+        """
+        return RemediationStatus.get(self)
