@@ -36,29 +36,30 @@ class RequestContext(object):
 
 class StandardRestClient(object):
     """
-    A standardized base class that can be used directly or as a subclass for consuming RESTful
-    HTTP services at PerformLine.
+    A standardized base class that can be used directly or as a subclass for
+    consuming RESTful HTTP services at PerformLine.
 
     Args:
-        url (str): The base URL that will apply to all instances of this class (can be overridden
-            in subclasses)
+        url (str): The base URL that will apply to all instances of this
+        class (can be overridden in subclasses)
 
-        prefix (str): A string to prefix all paths given to the :func:`request()` method.  This is
-            useful for endpoints that are always rooted at a particular path (e.g.: "/api").
+        prefix (str): A string to prefix all paths given to the
+        :func:`request()` method.  This is useful for endpoints that are
+        always rooted at a particular path (e.g.: "/api").
 
-        loglevel (str): A valid `logger` log level that is used for reporting details in the
-            underlying HTTP library.
+        loglevel (str): A valid `logger` log level that is used for
+        reporting details in the underlying HTTP library.
 
-        content_type (str): The default MIME type that is presented to and expected from
-            server responses.  This is a shorthand that populates the 'Content-Type' header by
-            default.
+        content_type (str): The default MIME type that is presented to and
+        expected from server responses.  This is a shorthand that populates
+        the 'Content-Type' header by default.
 
-        headers (dict): A dictionary of HTTP headers that should be included in every request. For
-            example, an 'Authorization' header.
+        headers (dict): A dictionary of HTTP headers that should be included
+        in every request. For example, an 'Authorization' header.
 
-        params (dict): A dictionary of query string parameters that should be included in every
-            request.  For example, `{'format': 'json'}` (which would include '?format=json' in the
-            request URLs).
+        params (dict): A dictionary of query string parameters that should
+        be included in every request.  For example, `{'format': 'json'}` (
+        which would include '?format=json' in the request URLs).
     """
 
     url = None

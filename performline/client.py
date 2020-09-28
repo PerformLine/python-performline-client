@@ -62,8 +62,8 @@ class Client(
             response (SuccessResponse): A SuccessResponse object containing the
                 data to be wrapped.
 
-            model (RestModel): A subclass of RestModel that should be used when creating
-                instances for each result in the response.
+            model (RestModel): A subclass of RestModel that should be used
+            when creating instances for each result in the response.
 
             flat (bool, optional): Whether single-element lists should return
                 just that element instead of the list itself.
@@ -71,8 +71,8 @@ class Client(
         Returns:
             If ``response`` contains zero results, returns `None`.
 
-            If ``response`` has one element and ``flat`` equals `True`, return the first
-            element as an instance of type ``model``.
+            If ``response`` has one element and ``flat`` equals `True`,
+            return the first element as an instance of type ``model``.
 
             In all other cases, return a list of instances of type ``model``.
         """

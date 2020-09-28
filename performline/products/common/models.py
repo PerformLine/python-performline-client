@@ -28,6 +28,8 @@ from __future__ import absolute_import
 from ...embedded.stdlib.clients.rest.models import RestModel
 from ...embedded.stdlib.utils.dicts import compact
 
+import requests, json
+
 
 class Brand(RestModel):
     """
@@ -45,9 +47,9 @@ class Brand(RestModel):
 
 class BrandRules(RestModel):
     """
-    An object for retrieving data rules for a specic brand.
+    An object for retrieving data rules for a specific brand.
     """
-    rest_root = '/brands/:brand_id/rules/'
+    rest_root = '/common/brands/:brand_id/rules/'
 
     def rules(self, limit=None, offset=None):
         return BrandRules.iall(self.client, params=compact(
@@ -77,6 +79,22 @@ class Campaign(RestModel):
             'limit': limit,
             'offset': offset,
         }))
+
+
+class CampaignRules(RestModel):
+    """
+    An object for retrieving data rules for a specific campaign.
+    """
+    rest_root = 'common/campaigns/:campaign_id/rules/'
+
+    def rules(self, limit=None, offset=None):
+        return self.iall(self.client, params=compact(
+            {
+                'campaign': self.id,
+                'limit': limit,
+                'offset': offset,
+            }
+        ))
 
 
 class Rule(RestModel):
@@ -118,13 +136,24 @@ class Item(RestModel):
         return TrafficSource.get(self.client, self.traffic_source_id)
 
 
-class RemediationStatus(RestModel):
+class RemediationStatus:
     """
     An object for retrieving all available remediation statuses in the 
     platform.
     """
-    rest_root = '/common/remediation_status'
+    def __init__(self, api_key):
+        self.url = "http://api.performline.com"
+        self.rest_root = '/common/remediation_status/'
+        self.api_key = api_key
     
     @property
-    def remediation_status(self):
-        return RemediationStatus.get(self.client)
+    def remediation_statuses(self):
+        print("from api key")
+        headers = {
+            "Authorization": "Token " + self.api_key
+        }
+        endpoint = self.url + self.rest_root
+        r = requests.get(endpoint, headers=headers)
+        data = json.loads(r._content)
+        statuses = data["Results"].get("Statuses", [])
+        return statuses
