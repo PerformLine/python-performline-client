@@ -28,7 +28,9 @@ from __future__ import absolute_import
 from ...embedded.stdlib.clients.rest.models import RestModel
 from ...embedded.stdlib.utils.dicts import compact
 
-import requests, json
+import requests
+import json
+import os
 
 
 class Brand(RestModel):
@@ -103,10 +105,6 @@ class Rule(RestModel):
     """
     rest_root = '/common/rules/'
 
-    # def brand(self):
-    # def campaigns(self):
-    # def pages(self):
-
 
 class TrafficSource(RestModel):
     """
@@ -136,24 +134,26 @@ class Item(RestModel):
         return TrafficSource.get(self.client, self.traffic_source_id)
 
 
-class RemediationStatus:
+class RemediationStatus(RestModel):
     """
     An object for retrieving all available remediation statuses in the 
     platform.
     """
-    def __init__(self, api_key):
-        self.url = "http://api.performline.com"
-        self.rest_root = '/common/remediation_status/'
-        self.api_key = api_key
-    
-    @property
-    def remediation_statuses(self):
-        print("from api key")
+    rest_root = "/common/remediation_status/"
+
+    @staticmethod
+    def get():
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/remediation_status/'
+        endpoint = url + rest_root
         headers = {
-            "Authorization": "Token " + self.api_key
+            "Authorization": "Token " + api_key
         }
-        endpoint = self.url + self.rest_root
-        r = requests.get(endpoint, headers=headers)
-        data = json.loads(r._content)
-        statuses = data["Results"].get("Statuses", [])
-        return statuses
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]["Statuses"]

@@ -85,5 +85,8 @@ class Client(
                     return models[0]
                 else:
                     return models
+            else:
+                return model
+
 
         return None

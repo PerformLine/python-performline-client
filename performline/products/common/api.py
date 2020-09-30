@@ -173,13 +173,14 @@ class CommonClientMethods(object):
         else:
             return Item.get(self, id)
 
-    def remediation_status(self):
+    def remediation_statuses(self):
         """
-        Retrieve all available remediation statuses available in the Performline platform.
+        Retrieve all available remediation statuses available in the
+        Performline platform.
 
         Returns:
             An instance of :class:`~performline.products.common.models.RemediationStatuses`,
             which has a property returning a list of strings representing the
             available remediation statuses.
         """
-        return RemediationStatus.get(self)
+        return RemediationStatus.get()

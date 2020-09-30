@@ -30,7 +30,7 @@ from .client import Client
 def client():
     # build a test client, falling back to the well-known test API key
     c = Client(
-        os.environ.get('PERFORMLINE_API_KEY', '00e4db7592541054d3791f42d62524f4139705c4'),
+        os.environ.get('PERFORMLINE_API_KEY', '976794ca6e5897e27d1b439064691bb1c3eb0420'),
         loglevel=os.environ.get('LOGLEVEL', 'WARNING')
     )
 
@@ -42,5 +42,20 @@ def client():
 
     if prefix is not None:
         c.prefix = prefix
+
+    return c
+
+
+def client_prod():
+    # build a test client that interacts with prod
+    c = Client(
+        token="976794ca6e5897e27d1b439064691bb1c3eb0420",
+        loglevel=os.environ.get('LOGLEVEL', 'WARNING')
+    )
+
+    url = "http://api.performline.com"
+    prefix = "/"
+    c.url = url
+    c.prefix = prefix
 
     return c
