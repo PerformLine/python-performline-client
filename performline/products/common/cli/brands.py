@@ -45,3 +45,10 @@ def list(state):
 @click.pass_obj
 def show(state, id):
     out(state, state.client.brands(id))
+
+
+@brands.command(help='List all rules associated with brand')
+@click.argument('id', type=int)
+@click.pass_obj
+def list_rules(state, id):
+    out(state, state.client.brand_rules(id))

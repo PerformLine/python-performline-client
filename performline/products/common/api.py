@@ -26,7 +26,9 @@
 from __future__ import absolute_import
 from .models import (
     Brand,
+    BrandRules,
     Campaign,
+    CampaignRules,
     Rule,
     TrafficSource,
     Item,
@@ -64,6 +66,9 @@ class CommonClientMethods(object):
         else:
             return Brand.get(self, id)
 
+    def brand_rules(self, id):
+        return BrandRules.get(id)
+
     def campaigns(self, id=None, limit=None, offset=None, brand=None):
         """
         Retrieve one or more campaigns associated with an account.
@@ -91,6 +96,9 @@ class CommonClientMethods(object):
             }))
         else:
             return Campaign.get(self, id)
+
+    def campaign_rules(self, id):
+        return CampaignRules.get(id)
 
     def rules(self, id=None, limit=None, offset=None):
         """

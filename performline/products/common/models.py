@@ -62,6 +62,23 @@ class BrandRules(RestModel):
             }
         ))
 
+    @staticmethod
+    def get(id):
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/brands/' + str(id) + '/rules/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]
+
 
 class Campaign(RestModel):
     """
@@ -97,6 +114,23 @@ class CampaignRules(RestModel):
                 'offset': offset,
             }
         ))
+
+    @staticmethod
+    def get(id):
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/campaigns/' + str(id) + '/rules/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]
 
 
 class Rule(RestModel):
