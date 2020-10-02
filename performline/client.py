@@ -49,6 +49,7 @@ class Client(
     url = 'https://api.performline.com'
     prefix = '/'
 
+    print("testing build")
     def __init__(self, token, *args, **kwargs):
         self.headers['Authorization'] = 'Token {0}'.format(token)
         super(Client, self).__init__(*args, **kwargs)
