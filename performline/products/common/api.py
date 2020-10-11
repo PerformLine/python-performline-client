@@ -50,10 +50,11 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Brand.iall(self, params=compact({
+            result = [output for output in Brand.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
-            }))
+            }))]
+            return result[:limit]
         else:
             return Brand.get(self, id)
 
