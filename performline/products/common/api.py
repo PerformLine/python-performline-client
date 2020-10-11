@@ -31,7 +31,7 @@ from ...embedded.stdlib.utils.dicts import compact
 class CommonClientMethods(object):
     """Methods for retrieving data common to all products."""
 
-    def brands(self, id=None, limit=None, offset=None):
+    def brands(self, id=None, limit=None, offset=None, create_date=None):
         """
         Retrieve one or more brands associated with an account.
 
@@ -53,8 +53,11 @@ class CommonClientMethods(object):
             result = [output for output in Brand.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
+                'create_date': create_date,
             }))]
-            return result[:limit] if limit > 0 else result
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Brand.get(self, id)
 
@@ -83,7 +86,9 @@ class CommonClientMethods(object):
                 'offset': offset,
                 'brand': brand,
             }))]
-            return result[:limit] if limit > 0 else result
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Campaign.get(self, id)
 
@@ -110,7 +115,9 @@ class CommonClientMethods(object):
                 'limit': limit,
                 'offset': offset,
             }))]
-            return result[:limit] if limit > 0 else result
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Rule.get(self, id)
 
@@ -138,7 +145,7 @@ class CommonClientMethods(object):
                 'limit': limit,
                 'offset': offset,
             }))]
-            return result[:limit] if limit > 0 else result
+            return result
         else:
             return TrafficSource.get(self, id)
 
@@ -167,6 +174,8 @@ class CommonClientMethods(object):
                 'brand': brand,
                 'campaign': campaign,
             }))]
-            return result[:limit] if limit > 0 else result
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Item.get(self, id)
