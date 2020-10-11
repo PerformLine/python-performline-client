@@ -54,7 +54,7 @@ class CommonClientMethods(object):
                 'limit': limit,
                 'offset': offset,
             }))]
-            return result[:limit]
+            return result[:limit] if limit > 0 else result
         else:
             return Brand.get(self, id)
 
@@ -78,11 +78,12 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            return Campaign.iall(self, params=compact({
+            result = [output for output in Campaign.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
                 'brand': brand,
-            }))
+            }))]
+            return result[:limit] if limit > 0 else result
         else:
             return Campaign.get(self, id)
 
@@ -105,10 +106,11 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Rule.iall(self, params=compact({
+            result = [output for output in Rule.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
-            }))
+            }))]
+            return result[:limit] if limit > 0 else result
         else:
             return Rule.get(self, id)
 
@@ -132,10 +134,11 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return TrafficSource.iall(self, params=compact({
+            result = [output for output in TrafficSource.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
-            }))
+            }))]
+            return result[:limit] if limit > 0 else result
         else:
             return TrafficSource.get(self, id)
 
@@ -158,11 +161,12 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Item.iall(self, params=compact({
+            result = [output for output in Item.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
                 'brand': brand,
                 'campaign': campaign,
-            }))
+            }))]
+            return result[:limit] if limit > 0 else result
         else:
             return Item.get(self, id)
