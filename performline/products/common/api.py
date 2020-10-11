@@ -180,7 +180,7 @@ class CommonClientMethods(object):
         else:
             return Item.get(self, id)
 
-    def workflows(self):
+    def workflows(self, id):
         """
         Retrieve all available remediation statuses available in the
         Performline platform.
@@ -190,4 +190,4 @@ class CommonClientMethods(object):
             which has a property returning a list of strings representing the
             available remediation statuses.
         """
-        return Workflow.get()
+        return Workflow.get(id)

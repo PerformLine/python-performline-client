@@ -23,10 +23,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Models representing common API objects"""
+from __future__ import absolute_import
 
 import os, json
 import requests
-from __future__ import absolute_import
 from ...embedded.stdlib.clients.rest.models import RestModel
 from ...embedded.stdlib.utils.dicts import compact
 
@@ -93,11 +93,15 @@ class Item(RestModel):
     def traffic_source(self):
         return TrafficSource.get(self.client, self.traffic_source_id)
 
+
+class Workflow(RestModel):
+
     @staticmethod
     def get(id):
         api_key = os.environ.get("API_KEY", "Not set")
+        print(api_key)
         url = "http://api.performline.com"
-        rest_root = '/common/items/' + str(id) + '/workflows/'
+        rest_root = '/common/items/' + str(id) + '/workflow/'
         endpoint = url + rest_root
         headers = {
             "Authorization": "Token " + api_key
@@ -108,4 +112,5 @@ class Item(RestModel):
             return
         content = json.loads(response._content)
         os.environ["API_KEY"] = ""
+        print(content["Results"])
         return content["Results"]

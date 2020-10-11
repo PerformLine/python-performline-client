@@ -33,7 +33,9 @@ def workflows():
     pass
 
 
-@workflows.command(help='List all workflows')
+@workflows.command(help='List all workflows for a given item')
+@click.argument('id',
+                type=int)
 @click.pass_obj
-def list(state):
-    out(state, state.client.workflows())
+def list(state, id):
+    out(state, state.client.workflows(id))
