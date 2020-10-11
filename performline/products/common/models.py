@@ -24,6 +24,8 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Models representing common API objects"""
 
+import os, json
+import requests
 from __future__ import absolute_import
 from ...embedded.stdlib.clients.rest.models import RestModel
 from ...embedded.stdlib.utils.dicts import compact
@@ -90,3 +92,28 @@ class Item(RestModel):
     @property
     def traffic_source(self):
         return TrafficSource.get(self.client, self.traffic_source_id)
+
+
+class Workflow(RestModel):
+    """
+    An object for retrieving all available workflows in the
+    platform.
+    """
+    rest_root = "/common/items/remediation_status/"
+
+    @staticmethod
+    def get():
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/remediation_status/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]["Statuses"]
