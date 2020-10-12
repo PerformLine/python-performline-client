@@ -58,7 +58,7 @@ class Stats(object):
         Returns:
             str
         """
-        if isinstance(self.prefix, (str, unicode)):
+        if isinstance(self.prefix, (str, bytes)):
             prefix = str(self.prefix).strip('.')
             metric = prefix + '.' + str(metric)
 

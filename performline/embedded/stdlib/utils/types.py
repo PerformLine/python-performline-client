@@ -5,10 +5,10 @@ import six
 import collections
 
 
-PRIMITIVE_TYPES = (bool, int, float, complex, str, list, tuple, dict)
+PRIMITIVE_TYPES = (bool, int, float, complex, bytes, list, tuple, dict)
 
 if six.PY2:
-    PRIMITIVE_TYPES += (long, unicode)
+    PRIMITIVE_TYPES += (long, str)
 
 
 def isprimitive(value):

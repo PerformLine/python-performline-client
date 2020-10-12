@@ -76,7 +76,7 @@ def camelize_dict(inValue, upperFirst=False):
 
     return mutate_dict(inValue,
                        keyFn=camelize,
-                       keyTypes=(str, unicode),
+                       keyTypes=(str, bytes),
                        upperFirst=upperFirst)
 
 
@@ -95,7 +95,7 @@ def underscore_dict(inValue, joiner='_'):
 
     return mutate_dict(inValue,
                        keyFn=underscore,
-                       keyTypes=(str, unicode),
+                       keyTypes=(str, bytes),
                        joiner=joiner)
 
 
