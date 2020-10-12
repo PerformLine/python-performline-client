@@ -97,11 +97,24 @@ class Item(RestModel):
 class Workflow(RestModel):
 
     @staticmethod
-    def get(id):
+    def get(id, product):
         api_key = os.environ.get("API_KEY", "Not set")
-        print(api_key)
         url = "http://api.performline.com"
-        rest_root = '/common/items/' + str(id) + '/workflow/'
+
+        if product == "web":
+            product_endpoint = "/web/pages/"
+        elif product == "callcenter":
+            product_endpoint = "/callcenter/calls/"
+        elif product == "chat":
+            product_endpoint = "/chatscout/chats/"
+        elif product == "social":
+            product_endpoint = "/social/posts/"
+        elif product == "email":
+            product_endpoint = "/email/messages/"
+        else:
+            product_endpoint = "/common/items/"
+
+        rest_root = product_endpoint + str(id) + '/workflow/'
         endpoint = url + rest_root
         headers = {
             "Authorization": "Token " + api_key

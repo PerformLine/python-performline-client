@@ -37,5 +37,45 @@ def workflows():
 @click.argument('id',
                 type=int)
 @click.pass_obj
-def list(state, id):
-    out(state, state.client.workflows(id))
+def common(state, id):
+    out(state, state.client.workflows(id, "common"))
+
+
+@workflows.command(help='List all workflows for a given item')
+@click.argument('id',
+                type=int)
+@click.pass_obj
+def web(state, id):
+    out(state, state.client.workflows(id, "web"))
+
+
+@workflows.command(help='List all workflows for a given item')
+@click.argument('id',
+                type=int)
+@click.pass_obj
+def calls(state, id):
+    out(state, state.client.workflows(id, "calls"))
+
+
+@workflows.command(help='List all workflows for a given item')
+@click.argument('id',
+                type=int)
+@click.pass_obj
+def chat(state, id):
+    out(state, state.client.workflows(id, "chat"))
+
+
+@workflows.command(help='List all workflows for a given item')
+@click.argument('id',
+                type=int)
+@click.pass_obj
+def social(state, id):
+    out(state, state.client.workflows(id, "social"))
+
+
+@workflows.command(help='List all workflows for a given item')
+@click.argument('id',
+                type=int)
+@click.pass_obj
+def email(state, id):
+    out(state, state.client.workflows(id, "email"))
