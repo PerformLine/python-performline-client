@@ -49,8 +49,8 @@ def make_response(results,
         if len(payload['Results']) < payload['ResultCount']['Total']:
             payload['ResultCount']['Current'] = len(payload['Results'])
 
-        if isinstance(limit, int):
-            payload['ResultCount']['Limit'] = limit
+        if isinstance(limit, int) or isinstance(limit, str):
+            payload['ResultCount']['Limit'] = int(limit)
             payload['ResultCount']['Offset'] = 0
 
         if isinstance(offset, int):

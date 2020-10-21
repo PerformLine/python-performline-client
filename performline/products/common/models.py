@@ -23,8 +23,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """Models representing common API objects"""
-
 from __future__ import absolute_import
+
+import os, json
+import requests
 from ...embedded.stdlib.clients.rest.models import RestModel
 from ...embedded.stdlib.utils.dicts import compact
 
@@ -167,7 +169,6 @@ class Item(RestModel):
     def traffic_source(self):
         return TrafficSource.get(self.client, self.traffic_source_id)
 
-
 class RemediationStatus(RestModel):
     """
     An object for retrieving all available remediation statuses in the 
@@ -191,3 +192,36 @@ class RemediationStatus(RestModel):
         content = json.loads(response._content)
         os.environ["API_KEY"] = ""
         return content["Results"]["Statuses"]
+
+class Workflow(RestModel):
+
+    @staticmethod
+    def get(id, product):
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+
+        if product == "web":
+            product_endpoint = "/web/pages/"
+        elif product == "callcenter":
+            product_endpoint = "/callcenter/calls/"
+        elif product == "chat":
+            product_endpoint = "/chatscout/chats/"
+        elif product == "social":
+            product_endpoint = "/social/posts/"
+        elif product == "email":
+            product_endpoint = "/email/messages/"
+        else:
+            product_endpoint = "/common/items/"
+
+        rest_root = product_endpoint + str(id) + '/workflow/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]

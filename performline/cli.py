@@ -32,6 +32,7 @@ from .products.common.cli.campaigns import campaigns
 from .products.common.cli.rules import rules
 from .products.common.cli.remediation_statuses import remediation_statuses
 from .products.common.cli.trafficsources import sources
+from .products.common.cli.workflows import workflows
 from .products.web.cli.pages import pages
 from .products.callcenter.cli.calls import calls
 from .products.chatscout.cli.chats import chats
@@ -124,6 +125,7 @@ main.add_command(pages)
 main.add_command(rules)
 main.add_command(sources)
 main.add_command(remediation_statuses)
+main.add_command(workflows)
 
 try:
     main(auto_envvar_prefix='PERFORMLINE')
