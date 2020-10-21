@@ -43,3 +43,10 @@ def list(state):
 @click.pass_obj
 def show(state, id):
     out(state, state.client.campaigns(id))
+
+
+@campaigns.command(help='List all rules associated with campaign')
+@click.argument('id', type=int)
+@click.pass_obj
+def list_rules(state, id):
+    out(state, state.client.campaign_rules(id))

@@ -26,8 +26,9 @@
 
 from __future__ import unicode_literals
 import unittest
-from ..models import TrafficSource
-from ....testing import client
+from performline.products.common.models import TrafficSource
+from performline.testing import client
+
 
 class TestTrafficSources(unittest.TestCase):
     def setUp(self):

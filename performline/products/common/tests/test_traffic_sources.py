@@ -23,32 +23,53 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from __future__ import absolute_import
-import click
-from ....cliutils import out
+from __future__ import unicode_literals
+import unittest
+from performline.products.common.models import TrafficSource
+from performline.testing import client, client_prod
 
 
-@click.group(help='Brands associated with your account')
-def brands():
-    pass
+class TestTrafficSources(unittest.TestCase):
+    def setUp(self):
+        self.client = client_prod()
 
+    def test_get_traffic_source(self):
+        ts = list(self.client.trafficsources())
 
-@brands.command(help='List all brands')
-@click.pass_obj
-def list(state):
-    out(state, state.client.brands())
+        first_ts = self.client.trafficsources(1)
 
+        assert isinstance(first_ts, TrafficSource)
 
-@brands.command(help='Show details about a single brand')
-@click.argument('id',
-                type=int)
-@click.pass_obj
-def show(state, id):
-    out(state, state.client.brands(id))
+        # Testing that the appropriate number of traffic sources should be
+        # returned
+        assert len(ts) == 5
 
+        # Test attributes of first traffic source against known traffic source
+        # fixtures
+        assert first_ts.Id == 1
+        assert first_ts.CompanyId == 10
 
-@brands.command(help='List all rules associated with brand')
-@click.argument('id', type=int)
-@click.pass_obj
-def list_rules(state, id):
-    out(state, state.client.brand_rules(id))
+    def test_traffic_source_end_point_access(self):
+        # Traffic source 6 belongs to agency test client does not have access
+        # to ts should be empty list which should automatically create error
+        ts = self.client.trafficsources(6)
+
+        assert len(ts) == 1
+
+    def test_traffic_source_endpoint_offset(self):
+        ts = list(self.client.trafficsources(offset=1))
+
+        assert len(ts) == 4
+
+        ts_names = [traffic_source.Id for traffic_source in ts]
+
+        assert ts_names == [2, 3, 4, 5]
+
+    def test_traffic_source_endpoint_limit(self):
+        ts = list(self.client.trafficsources(limit=3))
+
+        assert len(ts) == 3
+
+        ts_keys = [traffic_source.Id for traffic_source in ts]
+
+        assert ts_keys == [1, 2, 3]

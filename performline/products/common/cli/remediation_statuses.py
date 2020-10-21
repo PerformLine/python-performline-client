@@ -28,27 +28,12 @@ import click
 from ....cliutils import out
 
 
-@click.group(help='Brands associated with your account')
-def brands():
+@click.group(help='All remediation statuses in the Performline platform')
+def remediation_statuses():
     pass
 
 
-@brands.command(help='List all brands')
+@remediation_statuses.command(help='List all remediation statuses')
 @click.pass_obj
 def list(state):
-    out(state, state.client.brands())
-
-
-@brands.command(help='Show details about a single brand')
-@click.argument('id',
-                type=int)
-@click.pass_obj
-def show(state, id):
-    out(state, state.client.brands(id))
-
-
-@brands.command(help='List all rules associated with brand')
-@click.argument('id', type=int)
-@click.pass_obj
-def list_rules(state, id):
-    out(state, state.client.brand_rules(id))
+    out(state, state.client.remediation_statuses())

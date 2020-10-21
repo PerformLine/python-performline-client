@@ -30,9 +30,15 @@ import requests
 from ...embedded.stdlib.clients.rest.models import RestModel
 from ...embedded.stdlib.utils.dicts import compact
 
+import requests
+import json
+import os
+
 
 class Brand(RestModel):
-    """An object for retrieving data from and working with an individual brand."""
+    """
+    An object for retrieving data from and working with an individual brand.
+    """
     rest_root = '/common/brands/'
 
     def campaigns(self, limit=None, offset=None):
@@ -43,8 +49,44 @@ class Brand(RestModel):
         }))
 
 
+class BrandRules(RestModel):
+    """
+    An object for retrieving data rules for a specific brand.
+    """
+    rest_root = '/common/brands/:brand_id/rules/'
+
+    def rules(self, limit=None, offset=None):
+        return BrandRules.iall(self.client, params=compact(
+            {
+                'brand': self.id,
+                'limit': limit,
+                'offset': offset,
+            }
+        ))
+
+    @staticmethod
+    def get(id):
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/brands/' + str(id) + '/rules/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]
+
+
 class Campaign(RestModel):
-    """An object for retrieving data from and working with an individual campaign."""
+    """
+    An object for retrieving data from and working with an individual
+    campaign.
+    """
     rest_root = '/common/campaigns/'
 
     @property
@@ -59,26 +101,60 @@ class Campaign(RestModel):
             'offset': offset,
         }))
 
-    # def rules(self):
+
+class CampaignRules(RestModel):
+    """
+    An object for retrieving data rules for a specific campaign.
+    """
+    rest_root = 'common/campaigns/:campaign_id/rules/'
+
+    def rules(self, limit=None, offset=None):
+        return self.iall(self.client, params=compact(
+            {
+                'campaign': self.id,
+                'limit': limit,
+                'offset': offset,
+            }
+        ))
+
+    @staticmethod
+    def get(id):
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/campaigns/' + str(id) + '/rules/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]
 
 
 class Rule(RestModel):
-    """An object for retrieving data from and working with an individual rule."""
+    """
+    An object for retrieving data from and working with an individual rule.
+    """
     rest_root = '/common/rules/'
-
-    # def brand(self):
-    # def campaigns(self):
-    # def pages(self):
 
 
 class TrafficSource(RestModel):
-    """An object for retrieving data from and working with an individual traffic source."""
+    """
+    An object for retrieving data from and working with an individual traffic
+    source.
+    """
     rest_root = '/common/trafficsources/'
 
 
 class Item(RestModel):
-    """An object for retrieving data from and working with scorable content,
-    regardless of product."""
+    """
+    An object for retrieving data from and working with scorable content,
+    regardless of product.
+    """
     rest_root = '/common/items/'
 
     @property
@@ -93,6 +169,29 @@ class Item(RestModel):
     def traffic_source(self):
         return TrafficSource.get(self.client, self.traffic_source_id)
 
+class RemediationStatus(RestModel):
+    """
+    An object for retrieving all available remediation statuses in the 
+    platform.
+    """
+    rest_root = "/common/remediation_status/"
+
+    @staticmethod
+    def get():
+        api_key = os.environ.get("API_KEY", "Not set")
+        url = "http://api.performline.com"
+        rest_root = '/common/remediation_status/'
+        endpoint = url + rest_root
+        headers = {
+            "Authorization": "Token " + api_key
+        }
+        response = requests.get(endpoint, headers=headers)
+        if response.status_code != 200:
+            print("Received status code " + str(response.status_code))
+            return
+        content = json.loads(response._content)
+        os.environ["API_KEY"] = ""
+        return content["Results"]["Statuses"]
 
 class Workflow(RestModel):
 
@@ -125,5 +224,4 @@ class Workflow(RestModel):
             return
         content = json.loads(response._content)
         os.environ["API_KEY"] = ""
-        print(content["Results"])
         return content["Results"]

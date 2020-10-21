@@ -30,13 +30,14 @@ from .cliutils import errout
 from .products.common.cli.brands import brands
 from .products.common.cli.campaigns import campaigns
 from .products.common.cli.rules import rules
+from .products.common.cli.remediation_statuses import remediation_statuses
 from .products.common.cli.trafficsources import sources
 from .products.common.cli.workflows import workflows
 from .products.web.cli.pages import pages
 from .products.callcenter.cli.calls import calls
 from .products.chatscout.cli.chats import chats
 import click
-
+import os
 
 class State(object):
     def __init__(self, context, options={}):
@@ -113,6 +114,7 @@ def main(ctx,
         'loglevel': log_level,
         'format': format,
     })
+    os.environ["API_KEY"] = api_key
 
 
 main.add_command(brands)
@@ -122,6 +124,7 @@ main.add_command(chats)
 main.add_command(pages)
 main.add_command(rules)
 main.add_command(sources)
+main.add_command(remediation_statuses)
 main.add_command(workflows)
 
 try:

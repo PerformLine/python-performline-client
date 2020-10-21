@@ -24,7 +24,18 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import absolute_import
-from .models import Brand, Campaign, Rule, TrafficSource, Item, Workflow
+from .models import (
+    Brand,
+    BrandRules,
+    Campaign,
+    CampaignRules,
+    Rule,
+    TrafficSource,
+    Item,
+    RemediationStatus,
+    Workflow
+)
+
 from ...embedded.stdlib.utils.dicts import compact
 
 
@@ -61,6 +72,9 @@ class CommonClientMethods(object):
         else:
             return Brand.get(self, id)
 
+    def brand_rules(self, id):
+        return BrandRules.get(id)
+
     def campaigns(self, id=None, limit=None, offset=None, brand=None):
         """
         Retrieve one or more campaigns associated with an account.
@@ -91,6 +105,9 @@ class CommonClientMethods(object):
             return result
         else:
             return Campaign.get(self, id)
+
+    def campaign_rules(self, id):
+        return CampaignRules.get(id)
 
     def rules(self, id=None, limit=None, offset=None):
         """
@@ -180,14 +197,16 @@ class CommonClientMethods(object):
         else:
             return Item.get(self, id)
 
-    def workflows(self, id, product):
+    def remediation_statuses(self):
         """
         Retrieve all available remediation statuses available in the
         Performline platform.
-
         Returns:
             An instance of :class:`~performline.products.common.models.RemediationStatuses`,
             which has a property returning a list of strings representing the
-            available remediation statuses.
+            availa
+        return RemediationStatus.get()
         """
+    
+    def workflows(self, id, product):
         return Workflow.get(id, product)
