@@ -24,14 +24,14 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import absolute_import
-from .models import Brand, Campaign, Rule, TrafficSource, Item
+from .models import Brand, Campaign, Rule, TrafficSource, Item, Workflow
 from ...embedded.stdlib.utils.dicts import compact
 
 
 class CommonClientMethods(object):
     """Methods for retrieving data common to all products."""
 
-    def brands(self, id=None, limit=None, offset=None):
+    def brands(self, id=None, limit=None, offset=None, create_date=None):
         """
         Retrieve one or more brands associated with an account.
 
@@ -50,10 +50,14 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Brand.iall(self, params=compact({
+            result = [output for output in Brand.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
-            }))
+                'create_date': create_date,
+            }))]
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Brand.get(self, id)
 
@@ -77,11 +81,14 @@ class CommonClientMethods(object):
         """
 
         if id is None:
-            return Campaign.iall(self, params=compact({
+            result = [output for output in Campaign.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
                 'brand': brand,
-            }))
+            }))]
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Campaign.get(self, id)
 
@@ -104,10 +111,13 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Rule.iall(self, params=compact({
+            result = [output for output in Rule.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
-            }))
+            }))]
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Rule.get(self, id)
 
@@ -131,10 +141,11 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return TrafficSource.iall(self, params=compact({
+            result = [output for output in TrafficSource.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
-            }))
+            }))]
+            return result
         else:
             return TrafficSource.get(self, id)
 
@@ -157,11 +168,26 @@ class CommonClientMethods(object):
             See :func:`~performline.client.Client.request`
         """
         if id is None:
-            return Item.iall(self, params=compact({
+            result = [output for output in Item.iall(self, params=compact({
                 'limit': limit,
                 'offset': offset,
                 'brand': brand,
                 'campaign': campaign,
-            }))
+            }))]
+            if limit:
+                result = result[:limit]
+            return result
         else:
             return Item.get(self, id)
+
+    def workflows(self, id, product):
+        """
+        Retrieve all available remediation statuses available in the
+        Performline platform.
+
+        Returns:
+            An instance of :class:`~performline.products.common.models.RemediationStatuses`,
+            which has a property returning a list of strings representing the
+            available remediation statuses.
+        """
+        return Workflow.get(id, product)
